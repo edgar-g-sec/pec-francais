@@ -52,19 +52,26 @@
       margin-top:18px;
     }
 
-    nav{
+    /* Sommaire rétractable */
+    #toc{
       position:sticky; top:14px;
       align-self:start;
       border:1px solid var(--line);
       border-radius:14px;
-      padding:14px;
+      padding:10px 12px;
       background:#fff;
     }
-    nav .title{font-weight:700;margin:0 0 10px}
-    nav ul{margin:0;padding-left:18px}
+    #toc > summary{
+      cursor:pointer;
+      font-weight:800;
+      list-style:none;
+    }
+    #toc > summary::-webkit-details-marker{display:none}
+
+    nav ul{margin:10px 0 0;padding-left:18px}
     nav li{margin:6px 0}
 
-    main section{
+    main .card{
       border:1px solid var(--line);
       border-radius:14px;
       padding:18px;
@@ -76,6 +83,7 @@
     h3{margin:16px 0 8px;font-size:18px}
     .meta{color:var(--muted);font-size:14px;margin-top:6px}
 
+    /* Accordéons */
     details{
       border:1px solid var(--line);
       border-radius:12px;
@@ -87,6 +95,22 @@
     summary::-webkit-details-marker{display:none}
     summary:after{content:"▾"; float:right; color:var(--muted)}
     details[open] summary:after{content:"▴"}
+
+    /* Phases rétractables (un peu plus “section”) */
+    .phase{
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fff;
+      padding:14px 16px;
+      margin-bottom:16px;
+    }
+    .phase > summary{
+      font-weight:900;
+      font-size:20px;
+    }
+    .phase > summary:after{content:"▾"; float:right; color:var(--muted)}
+    .phase[open] > summary:after{content:"▴"}
+    .phase section{margin-top:10px}
 
     .two-col{
       display:grid;
@@ -102,16 +126,23 @@
     .k{color:var(--muted);font-size:13px;margin:0 0 6px}
     ul{margin:6px 0 0}
 
-    .foot{
-      margin-top:14px;
-      color:var(--muted);
-      font-size:13px;
+    .backtotop{
+      text-align:center;
+      margin:22px 0 0;
+    }
+    .backtotop a{
+      display:inline-block;
+      padding:8px 12px;
+      border:1px solid var(--line);
+      border-radius:999px;
+      background:var(--card);
+      color:var(--ink);
     }
 
     @media (max-width: 940px){
       .wrap{max-width:100%;padding:18px 12px 44px;}
       .grid{grid-template-columns:1fr}
-      nav{position:relative; top:auto}
+      #toc{position:relative; top:auto}
       .two-col{grid-template-columns:1fr}
     }
   </style>
@@ -136,192 +167,235 @@
     </header>
 
     <div class="grid">
-      <nav aria-label="Table des matières">
-        <p class="title">Sommaire</p>
-        <ul>
-          <li><a href="#phase1">Phase 1</a>
-            <ul>
-              <li><a href="#etape1">Étape 1 — Présentation</a></li>
-              <li><a href="#competences">Compétences clés en français</a></li>
-              <li><a href="#etape2">Étape 2 — Progression</a></li>
-              <li><a href="#liens-disciplines">Liens avec les autres disciplines</a></li>
-            </ul>
-          </li>
-          <li><a href="#phase2">Phase 2 — IA & numérique</a></li>
-          <li><a href="#phase3">Phase 3 — Transversalité</a></li>
-        </ul>
-        <p class="foot"><a href="#top">↥ Haut de page</a></p>
-      </nav>
+      <!-- Sommaire rétractable -->
+      <details id="toc" open>
+        <summary>Sommaire</summary>
+        <nav aria-label="Table des matières">
+          <ul>
+            <li><a href="#phase1">Phase 1</a>
+              <ul>
+                <li><a href="#etape1">Étape 1 — Présentation</a></li>
+                <li><a href="#competences">Compétences clés en français</a></li>
+                <li><a href="#etape2">Étape 2 — Progression</a></li>
+                <li><a href="#liens-disciplines">Liens avec les autres disciplines</a></li>
+              </ul>
+            </li>
+            <li><a href="#phase2">Phase 2 — IA & numérique</a></li>
+            <li><a href="#phase3">Phase 3 — Transversalité</a></li>
+          </ul>
+        </nav>
+      </details>
 
       <main>
-        <!-- PHASE 1 -->
-        <section id="phase1">
-          <h2>Phase 1</h2>
-          <p class="meta">Étape 1 : Présentation de la discipline + Compétences clés. Étape 2 : Découpages annuels / progression / enchaînements des contenus.</p>
+        <!-- PHASE 1 (rétractable) -->
+        <details id="phase1" class="phase" open>
+          <summary>Phase 1</summary>
+          <section>
+            <p class="meta">Étape 1 : Présentation de la discipline + Compétences clés. Étape 2 : Découpages annuels / progression / enchaînements des contenus.</p>
 
-          <!-- Étape 1 -->
-          <details id="etape1">
-            <summary>Étape 1 — Présentation de la discipline (Français)</summary>
-            <p>
-              La visée la plus haute de l’enseignement du français comme langue première est de favoriser un rapport vivant et personnel
-              de l’élève avec la langue et les idées, d’inciter à la fois au décentrement et à la quête de soi.
-              Les compétences proposées sont au service de cette visée, dans une atmosphère de confiance et de liberté favorisant la pensée critique.
-            </p>
-            <p>
-              Les œuvres littéraires constituent le point de départ et la finalité privilégiés : elles permettent compréhension de soi, d’autrui,
-              du monde et de la vie ; elles situent historiquement et socialement, ouvrent à d’autres mondes culturels, développent le sens esthétique
-              et éclairent les liens entre littérature, arts et domaines de la pensée.
-            </p>
-          </details>
+            <!-- Étape 1 -->
+            <details id="etape1">
+              <summary>Étape 1 — Présentation de la discipline (Français)</summary>
+              <p>
+                La visée la plus haute de l’enseignement du français comme langue première est de favoriser un rapport vivant et personnel
+                de l’élève avec la langue et les idées, d’inciter à la fois au décentrement et à la quête de soi.
+                Les compétences proposées sont au service de cette visée, dans une atmosphère de confiance et de liberté favorisant la pensée critique.
+              </p>
+              <p>
+                Les œuvres littéraires constituent le point de départ et la finalité privilégiés : elles permettent compréhension de soi, d’autrui,
+                du monde et de la vie ; elles situent historiquement et socialement, ouvrent à d’autres mondes culturels, développent le sens esthétique
+                et éclairent les liens entre littérature, arts et domaines de la pensée.
+              </p>
+            </details>
 
-          <!-- Compétences -->
-          <details id="competences">
-            <summary>Compétences clés en français</summary>
+            <!-- Compétences -->
+            <details id="competences">
+              <summary>Compétences clés en français</summary>
 
-            <h3>Compétence 1 : Lire, comprendre et interpréter des textes</h3>
-            <ul>
-              <li>Construire une lecture critique et nuancée de textes variés.</li>
-              <li>Contextualiser enjeux thématiques, stylistiques, culturels et historiques.</li>
-              <li>Interprétation personnelle et argumentée.</li>
-            </ul>
+              <h3>Compétence 1 : Lire, comprendre et interpréter des textes</h3>
+              <ul>
+                <li>Construire une lecture critique et nuancée de textes variés.</li>
+                <li>Contextualiser enjeux thématiques, stylistiques, culturels et historiques.</li>
+                <li>Interprétation personnelle et argumentée.</li>
+              </ul>
 
-            <h3>Compétence 2 : Produire des textes</h3>
-            <ul>
-              <li>Rédiger des textes cohérents et structurés.</li>
-              <li>Adapter langue, style et registre au contexte.</li>
-              <li>Argumenter avec références pertinentes.</li>
-            </ul>
+              <h3>Compétence 2 : Produire des textes</h3>
+              <ul>
+                <li>Rédiger des textes cohérents et structurés.</li>
+                <li>Adapter langue, style et registre au contexte.</li>
+                <li>Argumenter avec références pertinentes.</li>
+              </ul>
 
-            <h3>Compétence 3 : Écouter et prendre la parole</h3>
-            <ul>
-              <li>Dialoguer de manière active et critique.</li>
-              <li>Argumenter à l’oral de façon structurée.</li>
-            </ul>
+              <h3>Compétence 3 : Écouter et prendre la parole</h3>
+              <ul>
+                <li>Dialoguer de manière active et critique.</li>
+                <li>Argumenter à l’oral de façon structurée.</li>
+              </ul>
 
-            <h3>Compétence 4 : Pratiquer la langue et la littérature</h3>
-            <ul>
-              <li>Posture réflexive face aux enjeux de la communication.</li>
-              <li>Comprendre le rôle culturel et citoyen de la langue.</li>
-            </ul>
-          </details>
+              <h3>Compétence 4 : Pratiquer la langue et la littérature</h3>
+              <ul>
+                <li>Posture réflexive face aux enjeux de la communication.</li>
+                <li>Comprendre le rôle culturel et citoyen de la langue.</li>
+              </ul>
+            </details>
 
-          <!-- Étape 2 -->
-          <details id="etape2">
-            <summary>Étape 2 — Découpages annuels / Progression des compétences / Enchaînements des contenus</summary>
+            <!-- Étape 2 -->
+            <details id="etape2">
+              <summary>Étape 2 — Découpages annuels / Progression des compétences / Enchaînements des contenus</summary>
 
-            <details>
-              <summary>À la fin de la 1ère année</summary>
-              <div class="two-col">
-                <div class="box">
-                  <p class="k"><strong>Compétence 1</strong> — Lire, comprendre et interpréter</p>
-                  <ul>
-                    <li>Lecture d’œuvres intégrales (genres différents).</li>
-                    <li>Outils : dictionnaire, synthèse, personnages, intrigue, premières notions d’analyse.</li>
-                  </ul>
+              <details>
+                <summary>À la fin de la 1ère année</summary>
+                <div class="two-col">
+                  <div class="box">
+                    <p class="k"><strong>Compétence 1</strong> — Lire, comprendre et interpréter</p>
+                    <ul>
+                      <li>Lecture d’œuvres intégrales (genres différents).</li>
+                      <li>Outils : dictionnaire, synthèse, personnages, intrigue, premières notions d’analyse.</li>
+                    </ul>
+                  </div>
+                  <div class="box">
+                    <p class="k"><strong>Corpus</strong> (exemples)</p>
+                    <ul>
+                      <li>Moyen Âge – XVIe : roman courtois, satire, farce…</li>
+                      <li>Renaissance : Rabelais, Montaigne…</li>
+                      <li>Une œuvre contemporaine suisse-romande</li>
+                    </ul>
+                  </div>
                 </div>
-                <div class="box">
-                  <p class="k"><strong>Corpus</strong> (exemples)</p>
-                  <ul>
-                    <li>Moyen Âge – XVIe : roman courtois, satire, farce…</li>
-                    <li>Renaissance : Rabelais, Montaigne…</li>
-                    <li>Une œuvre contemporaine suisse-romande</li>
-                  </ul>
-                </div>
-              </div>
+              </details>
+
+              <details>
+                <summary>À la fin de la 2ème année</summary>
+                <ul>
+                  <li>Consolider les techniques de lecture acquises en 1re.</li>
+                  <li>Dissertation ~700 mots (800 avec citations).</li>
+                </ul>
+              </details>
+
+              <details>
+                <summary>À la fin de la 3ème année</summary>
+                <ul>
+                  <li>Commentaire composé ~800 mots.</li>
+                  <li>Textes au contexte historique plus complexe.</li>
+                </ul>
+              </details>
+
+              <details>
+                <summary>À la fin de la 4ème année</summary>
+                <ul>
+                  <li>Commentaire composé ~1000 mots.</li>
+                  <li>Intertextualité, littérature comparée, perspectives culturelles.</li>
+                </ul>
+              </details>
             </details>
 
-            <details>
-              <summary>À la fin de la 2ème année</summary>
+            <!-- Liens disciplines -->
+            <details id="liens-disciplines">
+              <summary>Liens avec les autres disciplines (extraits)</summary>
               <ul>
-                <li>Consolider les techniques de lecture acquises en 1re.</li>
-                <li>Dissertation ~700 mots (800 avec citations).</li>
+                <li>Histoire</li>
+                <li>Philosophie</li>
+                <li>Dispositif oralité</li>
+                <li>Liens externes (selon le document)</li>
               </ul>
             </details>
+          </section>
+        </details>
 
-            <details>
-              <summary>À la fin de la 3ème année</summary>
-              <ul>
-                <li>Commentaire composé ~800 mots.</li>
-                <li>Textes au contexte historique plus complexe.</li>
-              </ul>
-            </details>
-
-            <details>
-              <summary>À la fin de la 4ème année</summary>
-              <ul>
-                <li>Commentaire composé ~1000 mots.</li>
-                <li>Intertextualité, littérature comparée, perspectives culturelles.</li>
-              </ul>
-            </details>
-          </details>
-
-          <!-- Liens disciplines -->
-          <details id="liens-disciplines">
-            <summary>Liens avec les autres disciplines (extraits)</summary>
+        <!-- PHASE 2 (rétractable) -->
+        <details id="phase2" class="phase" open>
+          <summary>Phase 2 : IA et numérique</summary>
+          <section>
             <ul>
-              <li>Histoire</li>
-              <li>Philosophie</li>
-              <li>Dispositif oralité</li>
-              <li>Liens externes (selon le document)</li>
+              <li>Enjeux liés à l’IA</li>
+              <li>Place à donner à l’IA</li>
+              <li>Ressources numériques</li>
             </ul>
-          </details>
-        </section>
+            <p class="meta">Cette partie est indiquée comme section à développer dans le document.</p>
+          </section>
+        </details>
 
-        <!-- PHASE 2 -->
-        <section id="phase2">
-          <h2>Phase 2 : IA et numérique</h2>
-          <ul>
-            <li>Enjeux liés à l’IA</li>
-            <li>Place à donner à l’IA</li>
-            <li>Ressources numériques</li>
-          </ul>
-          <p class="meta">Cette partie est indiquée comme section à développer dans le document.</p>
-        </section>
+        <!-- PHASE 3 (rétractable) -->
+        <details id="phase3" class="phase" open>
+          <summary>Phase 3 : ajout de transversalité</summary>
+          <section>
+            <ul>
+              <li>Ressources en relation avec le thème annuel EDD/CIT</li>
+              <li>Propositions d’activités « CdBA FR/MA »</li>
+              <li>Propositions d’activités « Compétences transversales »</li>
+            </ul>
+            <p class="meta">Cette partie est indiquée comme section à développer dans le document.</p>
+          </section>
+        </details>
 
-        <!-- PHASE 3 -->
-        <section id="phase3">
-          <h2>Phase 3 : ajout de transversalité</h2>
-          <ul>
-            <li>Ressources en relation avec le thème annuel EDD/CIT</li>
-            <li>Propositions d’activités « CdBA FR/MA »</li>
-            <li>Propositions d’activités « Compétences transversales »</li>
-          </ul>
-          <p class="meta">Cette partie est indiquée comme section à développer dans le document.</p>
-        </section>
+        <!-- Haut de page en bas -->
+        <div class="backtotop">
+          <a href="#top">↥ Haut de page</a>
+        </div>
       </main>
     </div>
   </div>
 
   <script>
-    // Ferme tous les <details> "principaux" de Phase 1 (pas les sous-details internes)
-    function closePhase1TopDetails() {
+    // Ferme uniquement les <details> "niveau 1" à l’intérieur de Phase 1 (etape1/competences/etape2/liens)
+    function closePhase1InnerDetails() {
       const phase1 = document.getElementById("phase1");
       if (!phase1) return;
-
-      // Sélectionne uniquement les details directs (niveau 1) dans phase1
-      const topDetails = Array.from(phase1.querySelectorAll(":scope > details"));
-      topDetails.forEach(d => d.open = false);
-    }
-
-    function openOnly(id) {
-      closePhase1TopDetails();
-      const el = document.getElementById(id);
-      if (el && el.tagName.toLowerCase() === "details") el.open = true;
+      const inner = Array.from(phase1.querySelectorAll("section > details"));
+      inner.forEach(d => d.open = false);
     }
 
     function scrollToId(id) {
       const el = document.getElementById(id);
       if (!el) return;
+
+      // Si cible est une phase (<details>), on l'ouvre avant de scroller
+      if (el.tagName && el.tagName.toLowerCase() === "details") {
+        el.open = true;
+      }
       el.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // Ouvrir UNIQUEMENT un accordéon de Phase 1
+    function openOnlyPhase1Inner(innerId) {
+      const phase1 = document.getElementById("phase1");
+      if (!phase1) return;
+
+      // On ouvre Phase 1 (si elle était repliée)
+      phase1.open = true;
+
+      // On ferme les autres "niveau 1" dans Phase 1
+      closePhase1InnerDetails();
+
+      // On ouvre le bon
+      const target = document.getElementById(innerId);
+      if (target && target.tagName.toLowerCase() === "details") {
+        target.open = true;
+      }
     }
 
     // Actions des boutons du haut
     const actions = {
-      phase1: () => { closePhase1TopDetails(); scrollToId("phase1"); },
-      etape1: () => { openOnly("etape1"); setTimeout(() => scrollToId("etape1"), 50); },
-      competences: () => { openOnly("competences"); setTimeout(() => scrollToId("competences"), 50); },
-      etape2: () => { openOnly("etape2"); setTimeout(() => scrollToId("etape2"), 50); },
-      "liens-disciplines": () => { openOnly("liens-disciplines"); setTimeout(() => scrollToId("liens-disciplines"), 50); },
+      phase1: () => {
+        // n'ouvre pas les sous-sections ; juste Phase 1 + scroll
+        scrollToId("phase1");
+      },
+      etape1: () => {
+        openOnlyPhase1Inner("etape1");
+        setTimeout(() => scrollToId("etape1"), 50);
+      },
+      competences: () => {
+        openOnlyPhase1Inner("competences");
+        setTimeout(() => scrollToId("competences"), 50);
+      },
+      etape2: () => {
+        openOnlyPhase1Inner("etape2");
+        setTimeout(() => scrollToId("etape2"), 50);
+      },
+      "liens-disciplines": () => {
+        openOnlyPhase1Inner("liens-disciplines");
+        setTimeout(() => scrollToId("liens-disciplines"), 50);
+      },
       phase2: () => scrollToId("phase2"),
       phase3: () => scrollToId("phase3")
     };
