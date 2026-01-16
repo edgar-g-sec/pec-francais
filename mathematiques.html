@@ -14,9 +14,13 @@
       --muted:#6b7280;
       --shadow:0 10px 30px rgba(17,24,39,.06);
       --radius:16px;
-      --radius2:12px;
       --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+
+      --pill-bg:#f8fafc;
+      --pill-hover:#eef2ff;
+      --pill-active:#e0e7ff;
+      --pill-ring:#c7d2fe;
     }
     *{box-sizing:border-box}
     body{
@@ -26,12 +30,7 @@
       background:var(--bg);
       line-height:1.45;
     }
-    a{color:#1d4ed8; text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    .wrap{max-width:1200px;margin:24px auto;padding:0 16px 40px}
-
-    /* Header */
+    .wrap{max-width:1100px;margin:24px auto;padding:0 16px 40px;}
     .header{
       background:var(--card);
       border:1px solid var(--border);
@@ -39,28 +38,30 @@
       padding:18px 18px 14px;
       box-shadow:var(--shadow);
     }
-    .title{margin:0 0 4px;font-size:26px;letter-spacing:-0.02em}
+    .title{margin:0 0 4px;font-size:24px;letter-spacing:-0.02em}
     .subtitle{margin:0;color:var(--muted);font-size:14px}
 
-    /* Pills (comme capture) */
-    .pills{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 0}
-    .pill{
+    /* Pills */
+    .pills{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 2px}
+    .pill-btn{
+      appearance:none;
       border:1px solid var(--border);
-      background:#fff;
-      color:#374151;
-      padding:7px 10px;
-      border-radius:999px;
-      font-size:13px;
+      background: var(--pill-bg);
+      color: var(--text);
+      font-size: 13px;
+      padding: 7px 10px;
+      border-radius: 999px;
       cursor:pointer;
-      user-select:none;
-      transition:.15s transform, .15s background, .15s border-color;
+      transition: background .15s ease, border-color .15s ease, transform .05s ease;
+      white-space:nowrap;
     }
-    .pill:hover{transform:translateY(-1px)}
-    .pill.active{
-      border-color:#cfe0ff;
-      background:#e8efff;
-      color:#1d4ed8;
-      font-weight:600;
+    .pill-btn:hover{ background: var(--pill-hover); border-color: var(--pill-ring); }
+    .pill-btn:active{ transform: translateY(1px); }
+    .pill-btn[aria-current="true"]{
+      background: var(--pill-active);
+      border-color: var(--pill-ring);
+      box-shadow: 0 0 0 3px rgba(199,210,254,.35);
+      font-weight:700;
     }
 
     /* Layout */
@@ -71,9 +72,7 @@
       margin-top:16px;
       align-items:start;
     }
-    @media (max-width: 980px){
-      .grid{grid-template-columns:1fr}
-    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
 
     /* Sidebar */
     .side{
@@ -86,18 +85,9 @@
       top:16px;
     }
     @media (max-width: 980px){ .side{position:relative; top:auto} }
+    .sideTop{display:flex;align-items:center;justify-content:space-between;gap:10px}
     .side h3{margin:6px 0 10px;font-size:14px}
-    .toc{margin:0;padding-left:16px;font-size:14px}
-    .toc li{margin:6px 0}
-
-    /* Sidebar pliable */
-    .sideTop{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .sideBtns{display:flex; gap:8px}
+    .sideBtns{display:flex;gap:8px}
     .sideBtn{
       border:1px solid var(--border);
       background:#fff;
@@ -109,17 +99,52 @@
     }
     .sideBtn:hover{background:#f3f6ff; border-color:#cfe0ff}
     #tocWrap.isHidden{display:none}
+    .toc{margin:0;padding-left:16px;font-size:14px}
+    .toc li{margin:6px 0}
+    .toc a{color:#1d4ed8;text-decoration:none}
+    .toc a:hover{text-decoration:underline}
 
-    /* Pliage horizontal */
-    .grid.sidebarMini{
-      grid-template-columns: 72px 1fr;
-    }
-    .grid.sidebarMini .side{padding:10px}
+    /* Sidebar mini (horizontal collapse) */
+    .grid.sidebarMini{ grid-template-columns:72px 1fr; }
+    .grid.sidebarMini .side{ padding:10px; }
     .grid.sidebarMini .side h3,
-    .grid.sidebarMini #tocWrap{display:none}
-    .grid.sidebarMini .resourcesPanel{display:none !important}
-    .grid.sidebarMini .sideTop{justify-content:center}
-    .grid.sidebarMini .sideBtns{flex-direction:column}
+    .grid.sidebarMini #tocWrap{ display:none; }
+    .grid.sidebarMini .resourcesPanel{ display:none !important; }
+    .grid.sidebarMini .sideTop{ justify-content:center; }
+    .grid.sidebarMini .sideBtns{ flex-direction:column; }
+
+    /* Resources panel */
+    .resourcesPanel{
+      margin-top:12px;
+      border-top:1px solid var(--border);
+      padding-top:12px;
+    }
+    .resHead{
+      display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+      margin-bottom:10px;
+    }
+    .resTitle{font-weight:800;font-size:14px}
+    .resSub{color:var(--muted);font-size:12px;margin-top:2px}
+    .resList{display:flex;flex-direction:column;gap:8px}
+    .resItem{
+      display:flex;gap:10px;align-items:flex-start;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px;background:#fff;
+    }
+    .resIcon{
+      width:34px;height:34px;border-radius:10px;border:1px solid var(--border);
+      display:flex;align-items:center;justify-content:center;
+      background:#fbfcff;font-size:16px;flex:0 0 auto;
+    }
+    .resBody{min-width:0}
+    .resName{font-weight:700;margin:0;font-size:13px}
+    .resMeta{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .resLink{
+      display:inline-block;margin-top:6px;font-size:12px;
+      color:#1d4ed8;text-decoration:none;
+    }
+    .resLink:hover{text-decoration:underline}
 
     /* Main */
     .main{
@@ -129,127 +154,24 @@
       box-shadow:var(--shadow);
       padding:14px;
     }
-
-    /* Section */
     .section{
       border:1px solid var(--border);
       border-radius:var(--radius);
       background:#fff;
       padding:14px;
-      margin-bottom:12px;
+      margin-bottom:14px;
     }
     .sectionHead{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:12px;
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      margin-bottom:10px;
     }
     .sectionTitle{
-      display:flex;
-      align-items:center;
-      gap:10px;
-      margin:0;
-      font-weight:800;
-      font-size:20px;
-      letter-spacing:-0.02em;
+      display:flex;align-items:center;gap:10px;
+      margin:0;font-weight:900;font-size:20px;letter-spacing:-0.02em;
     }
-    .mini{margin:8px 0 0;color:var(--muted);font-size:13px}
-    .muted{color:var(--muted)}
+    .mini{margin:0;color:var(--muted);font-size:13px}
 
-    /* Accordions (autres blocs) */
-    details.accordion{
-      border:1px solid var(--border);
-      border-radius:12px;
-      background:#fbfcff;
-      margin-top:10px;
-      overflow:hidden;
-    }
-    details.accordion > summary{
-      list-style:none;
-      cursor:pointer;
-      padding:11px 12px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:10px;
-      font-weight:700;
-      user-select:none;
-    }
-    details.accordion > summary::-webkit-details-marker{display:none}
-    .accBody{padding:0 12px 12px}
-    .accBody p{margin:10px 0}
-    .bullets{margin:8px 0 0; padding-left:18px}
-    .bullets li{margin:6px 0}
-
-    /* Chips / filters */
-    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-    .chip{
-      border:1px solid var(--border);
-      background:#fff;
-      border-radius:999px;
-      padding:6px 10px;
-      font-size:13px;
-      cursor:pointer;
-      user-select:none;
-    }
-    .chip.active{
-      background:#e8efff;
-      border-color:#cfe0ff;
-      color:#1d4ed8;
-      font-weight:700;
-    }
-
-    /* Items */
-    .items{margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
-    .item{
-      padding:10px 10px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      margin:8px 0;
-      background:#fff;
-    }
-    .itemTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
-    .itemTitle{margin:0;font-weight:700}
-    .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;min-width:160px}
-    .badge{
-      font-family:var(--mono);
-      font-size:12px;
-      padding:3px 7px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      background:#fff;
-      color:#111827;
-      white-space:nowrap;
-    }
-    .note{
-      border-left:3px solid #c7d2fe;
-      padding:8px 10px;
-      margin:10px 0;
-      background:#f5f7ff;
-      color:#1f2937;
-      border-radius:10px;
-      font-size:13px;
-    }
-    .k{
-      font-family:var(--mono);
-      background:#f3f4f6;
-      padding:2px 6px;
-      border-radius:8px;
-      border:1px solid #e5e7eb;
-    }
-    .searchRow{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center}
-    input[type="search"]{
-      flex:1;min-width:240px;border:1px solid var(--border);
-      border-radius:12px;padding:10px 12px;font-size:14px;outline:none;background:#fff;
-    }
-    input[type="search"]:focus{
-      border-color:#cfe0ff;
-      box-shadow:0 0 0 4px rgba(37,99,235,.08);
-    }
-
-    /* --------- Compétences (style capture) --------- */
-    .competences{margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
-
+    /* Competences (accordion cards like screenshot) */
     details.comp{
       border:1px solid var(--border);
       border-radius:14px;
@@ -266,99 +188,131 @@
       align-items:center;
       justify-content:space-between;
       gap:12px;
-      font-weight:800;
+      font-weight:900;
       letter-spacing:-0.01em;
     }
     details.comp > summary::-webkit-details-marker{display:none}
-
     .compLeft{display:flex;align-items:flex-start;gap:10px;min-width:0}
-    .chev{
-      width:18px;height:18px;
-      display:inline-flex;align-items:center;justify-content:center;
-      color:var(--muted);
-      transform: translateY(2px);
-      font-size:14px;
-    }
+    .chev{width:18px;height:18px;display:inline-flex;align-items:center;justify-content:center;color:var(--muted);transform:translateY(2px);font-size:14px}
     details.comp[open] .chev{ transform: translateY(2px) rotate(90deg); }
     .compTitle{margin:0;font-size:15px;line-height:1.25}
-    .compBody{padding:0 12px 12px}
-    .subpoints{margin:8px 0 0;padding-left:20px;color:#111827;font-size:14px}
-    .subpoints li{margin:8px 0}
-
-    .trait{
-      height:1px;
-      background:linear-gradient(to right, transparent, #e6e8f0, transparent);
-      margin:10px 0;
+    .badge{
+      font-family:var(--mono);
+      font-size:12px;
+      padding:4px 8px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      background:#fff;color:#111827;
+      white-space:nowrap;
     }
+    .compBody{padding:0 12px 12px}
+    .subpoints{margin:8px 0 0;padding-left:20px;font-size:14px}
+    .subpoints li{margin:8px 0}
+    .trait{height:1px;background:linear-gradient(to right, transparent, #e6e8f0, transparent);margin:10px 0;}
 
+    /* Competence accents */
     .c1{ --accent:#2563eb; --accentSoft:#e8efff; }
     .c2{ --accent:#16a34a; --accentSoft:#e8fff1; }
     .c3{ --accent:#f59e0b; --accentSoft:#fff6e6; }
     .c4{ --accent:#7c3aed; --accentSoft:#f3e8ff; }
     .c5{ --accent:#ef4444; --accentSoft:#ffecec; }
-
-    details.comp.c1 > summary, details.comp.c2 > summary, details.comp.c3 > summary, details.comp.c4 > summary, details.comp.c5 > summary{
+    details.comp.c1 > summary,
+    details.comp.c2 > summary,
+    details.comp.c3 > summary,
+    details.comp.c4 > summary,
+    details.comp.c5 > summary{
       background: linear-gradient(90deg, var(--accentSoft), #ffffff 65%);
     }
-    details.comp.c1 .badge, details.comp.c2 .badge, details.comp.c3 .badge, details.comp.c4 .badge, details.comp.c5 .badge{
-      border-color:#dbe2ff;
-      background:#fff;
-    }
     @supports (background: color-mix(in srgb, red 50%, white)){
-      details.comp.c1 .badge, details.comp.c2 .badge, details.comp.c3 .badge, details.comp.c4 .badge, details.comp.c5 .badge{
+      details.comp.c1 .badge,
+      details.comp.c2 .badge,
+      details.comp.c3 .badge,
+      details.comp.c4 .badge,
+      details.comp.c5 .badge{
         border-color: color-mix(in srgb, var(--accent) 25%, #e6e8f0);
         background: color-mix(in srgb, var(--accentSoft) 60%, #ffffff);
       }
     }
 
-    /* --------- Ressources panel --------- */
-    .resourcesPanel{
-      margin-top:12px;
-      border-top:1px solid var(--border);
-      padding-top:12px;
-    }
-    .resHead{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-      margin-bottom:10px;
-    }
-    .resTitle{font-weight:800;font-size:14px}
-    .resSub{color:var(--muted);font-size:12px;margin-top:2px}
-    .resList{display:flex;flex-direction:column;gap:8px}
+    /* Progression: year accents */
+    .y1{ --yearAccent:#2563eb; --yearSoft:#e8efff; }
+    .y2{ --yearAccent:#16a34a; --yearSoft:#e8fff1; }
+    .y3{ --yearAccent:#f59e0b; --yearSoft:#fff6e6; }
+    .y4{ --yearAccent:#7c3aed; --yearSoft:#f3e8ff; }
 
-    .resItem{
-      display:flex;
-      gap:10px;
-      align-items:flex-start;
+    .yearGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;margin-top:12px;
+    }
+    @media (max-width: 720px){ .yearGrid{ grid-template-columns:1fr; } }
+    .yearTile{
       border:1px solid var(--border);
-      border-radius:12px;
-      padding:10px;
+      border-radius:14px;
       background:#fff;
+      padding:14px;
+      cursor:pointer;
+      position:relative;
+      overflow:hidden;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
     }
-    .resIcon{
-      width:34px;height:34px;
-      border-radius:10px;
+    .yearTile::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px;background:var(--yearAccent);}
+    .yearTile:hover{transform:translateY(-2px);border-color:#cfe0ff;box-shadow:0 14px 30px rgba(17,24,39,.08);}
+    .yearTileTitle{margin:0;font-weight:950;font-size:16px;letter-spacing:-0.01em}
+    .yearTileSub{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .yearTileTag{
+      display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+      font-size:12px;color:#374151;padding:4px 8px;border-radius:999px;
       border:1px solid var(--border);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      background:#fbfcff;
-      font-size:16px;
-      flex:0 0 auto;
+      background: color-mix(in srgb, var(--yearSoft) 55%, #ffffff);
     }
-    .resBody{min-width:0}
-    .resName{font-weight:700;margin:0;font-size:13px}
-    .resMeta{margin:2px 0 0;color:var(--muted);font-size:12px}
-    .resLink{
-      display:inline-block;
-      margin-top:6px;
-      font-size:12px;
-      color:#1d4ed8;
-      text-decoration:none;
+
+    .yearNavBar{
+      display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+      margin-top:10px;padding:10px;border:1px solid var(--border);border-radius:14px;
+      background: linear-gradient(90deg, var(--yearSoft), #ffffff 70%);
     }
-    .resLink:hover{text-decoration:underline}
+    .backLink{
+      border:none;background:transparent;color:#1d4ed8;cursor:pointer;
+      padding:6px 8px;border-radius:10px;font-size:13px;
+    }
+    .backLink:hover{background:rgba(29,78,216,.08);}
+    .yearBtns{display:flex;gap:8px;flex-wrap:wrap;}
+    .yearBtn{
+      border:1px solid var(--border);background:#fff;border-radius:999px;
+      padding:7px 10px;cursor:pointer;font-size:13px;color:#374151;
+      transition:.12s background, .12s border-color, .12s transform;
+    }
+    .yearBtn:hover{transform:translateY(-1px);border-color:#cfe0ff;background:#f3f6ff;}
+    .yearBtn.active{
+      border-color: color-mix(in srgb, var(--yearAccent) 35%, var(--border));
+      background: color-mix(in srgb, var(--yearSoft) 70%, #ffffff);
+      color:#111827;font-weight:800;
+    }
+
+    .progressGrid{
+      display:grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:12px;margin-top:12px;align-items:stretch;
+    }
+    @media (max-width: 720px){ .progressGrid{ grid-template-columns:1fr; } }
+    .progCard{
+      border:1px solid var(--border);
+      border-radius:14px;background:#fff;overflow:hidden;cursor:pointer;position:relative;
+      transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease;
+    }
+    .progCard:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(17,24,39,.08);border-color:#cfe0ff;}
+    .progCard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:5px;background:var(--accent);}
+    .progCardHead{
+      padding:12px 12px 10px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;
+      border-bottom:1px solid var(--border);
+      background: linear-gradient(90deg, var(--accentSoft), #ffffff 70%);
+    }
+    .progCardTitle{margin:0;font-weight:950;font-size:14px;line-height:1.2}
+    .progCardSub{margin:4px 0 0;color:var(--muted);font-size:12px}
+    .progCardBody{padding:10px 12px 12px}
+    .progList{margin:0;padding-left:18px;font-size:13px}
+    .progList li{margin:6px 0}
   </style>
 </head>
 
@@ -367,15 +321,14 @@
     <header class="header" id="top">
       <h1 class="title">Plan d’étude cantonal — Mathématiques</h1>
       <p class="subtitle">Collège de Genève — version “web” (travail en cours)</p>
+
       <div class="pills" id="topPills"></div>
     </header>
 
     <div class="grid" id="grid">
-      <!-- Sidebar (sommaire + ressources) -->
       <aside class="side" id="sidebar">
         <div class="sideTop">
           <h3>Sommaire</h3>
-
           <div class="sideBtns">
             <button class="sideBtn" id="btnCollapseV" type="button">Replier</button>
             <button class="sideBtn" id="btnCollapseH" type="button">⇔</button>
@@ -386,7 +339,6 @@
           <ul class="toc" id="toc"></ul>
         </div>
 
-        <!-- Ressources (caché tant qu’aucune compétence n’est sélectionnée) -->
         <div class="resourcesPanel" id="resourcesPanel" hidden>
           <div class="resHead">
             <div>
@@ -395,563 +347,467 @@
             </div>
             <button class="sideBtn" id="btnCloseRes" type="button">Fermer</button>
           </div>
-
           <div class="resList" id="resList"></div>
         </div>
       </aside>
 
-      <!-- Main -->
-      <main class="main" id="content"></main>
+      <main class="main" id="main">
+        <section class="section" id="competences">
+          <div class="sectionHead">
+            <h2 class="sectionTitle">▼ Compétences clés en mathématiques</h2>
+            <p class="mini">Cliquez sur une compétence pour afficher la déclinaison (a, b, c...).</p>
+          </div>
+
+          <div id="competencesMount"></div>
+        </section>
+
+        <section class="section" id="progression">
+          <div class="sectionHead">
+            <h2 class="sectionTitle">▼ Progression (1re → 4e)</h2>
+            <p class="mini">Cliquez une année (grille), puis basculez via les boutons.</p>
+          </div>
+          <div id="progressionMount"></div>
+        </section>
+
+        <section class="section" id="decoupages">
+          <div class="sectionHead">
+            <h2 class="sectionTitle">▼ Découpages annuels</h2>
+            <p class="mini">Section démo (à enrichir).</p>
+          </div>
+          <p style="margin:0;color:var(--muted);font-size:13px;">Contenu à définir : chapitres, objectifs, liens C1–C5, etc.</p>
+        </section>
+
+        <section class="section" id="acquis">
+          <div class="sectionHead">
+            <h2 class="sectionTitle">▼ Acquis du CO</h2>
+            <p class="mini">Section démo (à enrichir).</p>
+          </div>
+          <p style="margin:0;color:var(--muted);font-size:13px;">Contenu à intégrer : acquis CdBA / NO / GM…</p>
+        </section>
+
+        <section class="section" id="phase2">
+          <div class="sectionHead">
+            <h2 class="sectionTitle">▼ Phase 2 : IA & numérique</h2>
+            <p class="mini">Section démo (à enrichir).</p>
+          </div>
+          <ul style="margin:0;padding-left:18px;font-size:13px;">
+            <li>Enjeux liés à l’IA</li>
+            <li>Place à donner à l’IA</li>
+            <li>Ressources numériques</li>
+          </ul>
+        </section>
+
+        <section class="section" id="phase3">
+          <div class="sectionHead">
+            <h2 class="sectionTitle">▼ Phase 3 : transversalité</h2>
+            <p class="mini">Section démo (à enrichir).</p>
+          </div>
+          <p style="margin:0;color:var(--muted);font-size:13px;">Contenu à définir.</p>
+        </section>
+      </main>
     </div>
   </div>
 
-<script>
-/* --- Données (maquette) --- */
-const DATA = {
-  nav: [
-    { id:"competences", label:"Compétences clés" },
-    { id:"progression", label:"Progression (1re → 4e)" },
-    { id:"decoupages", label:"Découpages annuels" },
-    { id:"acquisCO", label:"Acquis du CO" },
-    { id:"phase2", label:"Phase 2 : IA & numérique" },
-    { id:"phase3", label:"Phase 3 : transversalité" }
-  ],
-
-  progressionParAnnee: [
-    { annee:"1re année", points:[
-      "Calculer avec entiers, rationnels et réels.",
-      "Résoudre équations/inéquations (1er, 2e degré + factorisation).",
-      "Développer / réduire / factoriser.",
-      "Représenter fonctions élémentaires (dont 1er et 2e degrés).",
-      "Géométrie (angles, triangles, Pythagore, Thalès, cercles).",
-      "Trigonométrie triangle rectangle."
-    ]},
-    { annee:"2e année", points:[
-      "Géométrie cartésienne (droites, cercles).",
-      "Trigonométrie triangle quelconque.",
-      "Statistiques (moyenne, médiane, variance, écart-type).",
-      "Équations et fonctions : polynomiales, rationnelles, exponentielles, logarithmiques, trigonométriques.",
-      "Calcul vectoriel de base."
-    ]},
-    { annee:"3e année", points:[
-      "Suites (terme général, somme arithm./géom.).",
-      "Limites, dérivées, étude de fonctions, optimisation.",
-      "Combinatoire.",
-      "Probabilités discrètes (conditionnelle, binomiale).",
-      "Produit scalaire, droites/plans (plan & espace)."
-    ]},
-    { annee:"4e année", points:[
-      "Primitives, intégrales, problèmes via calcul intégral.",
-      "Équations différentielles simples.",
-      "Produit vectoriel & distances (plan/espace).",
-      "Intervalles de confiance & tests statistiques.",
-      "Probabilités continues (loi normale)."
-    ]}
-  ],
-
-  decoupages: {
-    annee: "Première année (niveau normal) — exemple",
-    chapitres: [
-      {
-        id:"A1-CH1",
-        titre:"Chapitre 1 : Calcul numérique et algébrique",
-        items: [
-          { titre:"Définir les ensembles de nombres (N, Z, Q → approche R), puissances entières et racines carrées", tags:["C2","CdB"] },
-          { titre:"Connaître le vocabulaire et les notations du calcul numérique et de la théorie des ensembles (liste du minimum commun)", tags:["C3","CdB"] },
-          { titre:"Calculer avec les nombres entiers et relatifs (priorités, parenthèses, signes, fractions)", tags:["C1","L"] },
-          { titre:"Différencier nombres, constantes et variables", tags:["C2","CdB"] },
-          { titre:"Lire et utiliser les notations algébriques (liste des notations communes)", tags:["C3"] },
-          { titre:"Calculer avec les puissances entières et les racines carrées", tags:["C1","CdB"] },
-          { titre:"Analyser la structure de termes algébriques", tags:["C3"] },
-          { titre:"Effectuer des calculs algébriques : développer, réduire, factoriser", tags:["C2"] },
-          { titre:"Construction mathématique : déf./conjecture/contre-exemple/démonstration/théorème/réciproque/contraposée + produire des conjectures simples", tags:["C2"] },
-          { titre:"Démonstration : propriétés des puissances, racines, irrationalité de √2, identités remarquables", tags:["C2"] },
-          { titre:"Éléments d’histoire des nombres et de l’algèbre (liste du minimum commun)", tags:["C4","L"] }
-        ]
+  <script>
+    // -----------------------
+    // Helpers
+    // -----------------------
+    function h(tag, attrs={}, children=[]){
+      const el = document.createElement(tag);
+      for(const [k,v] of Object.entries(attrs||{})){
+        if(k === "class") el.className = v;
+        else if(k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
+        else if(v === true) el.setAttribute(k, "");
+        else if(v !== false && v != null) el.setAttribute(k, String(v));
       }
-    ]
-  },
+      (children||[]).forEach(ch => {
+        if(ch == null) return;
+        el.appendChild(typeof ch === "string" ? document.createTextNode(ch) : ch);
+      });
+      return el;
+    }
+    function smoothScrollTo(id){
+      const el = document.getElementById(id);
+      if(!el) return;
+      el.scrollIntoView({behavior:"smooth", block:"start"});
+    }
 
-  acquisCO: [
-    { bloc:"FA — Calcul littéral", items:[
-      "Connaître le vocabulaire lié au calcul littéral",
-      "Connaître et utiliser les conventions du calcul littéral",
-      "Calculer avec monômes et polynômes",
-      "Évaluer une expression littérale",
-      "Transformer des formules simples (isoler une variable)",
-      "Développer (identités remarquables, distributivité)",
-      "Factoriser (mise en évidence, identités remarquables)",
-      "Traduire programme de calcul ↔ expression littérale"
-    ]},
-    { bloc:"FA — Premier degré", items:[
-      "Vocabulaire fonctions affines/linéaires/constantes",
-      "Représenter une affine (pente & ordonnée à l’origine)",
-      "Représenter une affine (2 points)",
-      "Retrouver l’expression d’une affine depuis le graphe (pente fractionnaire)",
-      "Parallélisme / perpendicularité",
-      "Résoudre équation du 1er degré (coefficients fractionnaires)",
-      "Traduire un problème en équation du 1er degré",
-      "Image, préimage, intersections avec Ox/Oy"
-    ]},
-    { bloc:"NO — Calcul numérique", items:[
-      "Calculer efficacement (4 opérations, priorités) sur entiers relatifs, décimaux, rationnels",
-      "Comparer deux nombres",
-      "Notation scientifique : définition + calculs",
-      "Règles de calcul des puissances entières",
-      "Racines carrées et cubiques + propriétés"
-    ]},
-    { bloc:"GM — Géométrie (Pythagore & figures)", items:[
-      "Théorème de Pythagore (direct, réciproque, contraposée)",
-      "Utiliser Pythagore pour longueur manquante / tester rectangle / dans l’espace",
-      "Périmètres (figures simples, polygones par décomposition)",
-      "Aires (figures simples, polygones par décomposition)",
-      "Cercle : périmètre & aire, longueur d’arc, secteur"
-    ]}
-  ],
+    // -----------------------
+    // Data
+    // -----------------------
+    const DATA = {
+      nav: [
+        { id:"competences", label:"Compétences clés" },
+        { id:"progression", label:"Progression (1re → 4e)" },
+        { id:"decoupages", label:"Découpages annuels" },
+        { id:"acquis", label:"Acquis du CO" },
+        { id:"phase2", label:"Phase 2 : IA & numérique" },
+        { id:"phase3", label:"Phase 3 : transversalité" },
+      ],
 
-  phase2: { note:"Section indiquée comme à développer : Enjeux IA, place à donner à l’IA, ressources numériques." },
-  phase3: { note:"Section indiquée comme à développer : ajout de transversalité." }
-};
+      competences: [
+        {
+          code:"C1", cls:"c1",
+          title:"C1 — Raisonner de façon argumentée et rigoureuse",
+          points:[
+            "Acquérir les bases de la démarche déductive : définition, axiome, conjecture, démonstration, théorème, hypothèse, conclusion, contre-exemple, implication, réciproque, contraposée.",
+            "Être capable de comprendre, critiquer et restituer un raisonnement mathématique ou logique.",
+            "Produire une pensée logique et abstraite structurée."
+          ]
+        },
+        {
+          code:"C2", cls:"c2",
+          title:"C2 — Maîtriser les savoir-faire techniques en mathématiques",
+          points:[
+            "Savoir utiliser les fondamentaux de niveau gymnasial en arithmétique, algèbre, analyse, géométrie, logique, probabilités et statistiques.",
+            "Développer des stratégies pour porter un regard critique dynamique sur un processus de résolution : prévoir, analyser et vérifier la cohérence d’un résultat.",
+            "Utiliser efficacement les moyens numériques à disposition."
+          ]
+        },
+        {
+          code:"C3", cls:"c3",
+          title:"C3 — Appréhender un problème à l’aide des outils mathématiques",
+          points:[
+            "Modéliser un problème en mobilisant le registre adéquat (schématique, algébrique, graphique).",
+            "Appliquer des méthodes standards de résolution de problèmes (se ramener à un cas connu, étudier un cas particulier, introduire un élément auxiliaire, etc.) et choisir les savoir-faire techniques adéquats.",
+            "Porter un regard critique et interpréter des résultats dans différents contextes (notamment évaluer la précision attendue) dans une réponse (valeur exacte, arrondi, chiffres significatifs)."
+          ]
+        },
+        {
+          code:"C4", cls:"c4",
+          title:"C4 — Communiquer à l’écrit et à l’oral via le langage symbolique et graphique",
+          points:[
+            "Utiliser de façon précise les notations, symboles et définitions mathématiques selon les conventions définies par la Commission Romande de Mathématique.",
+            "Utiliser les différents registres de représentations (graphique, algébrique, schématique et textuel) selon leur pertinence.",
+            "Produire une argumentation claire et structurée, à l’écrit et à l’oral."
+          ]
+        },
+        {
+          code:"C5", cls:"c5",
+          title:"C5 — Inscrire les mathématiques dans l’histoire, liens & enjeux actuels",
+          points:[
+            "Transposer les mathématiques dans les autres disciplines (en particulier biologie, chimie, économie, géographie, informatique, physique).",
+            "Avoir une vision des mathématiques dans une perspective historique (connaître quelques grandes étapes et personnages historiques).",
+            "Avoir une vision des mathématiques dans une perspective sociale, de leur utilité et des applications possibles, y compris en termes d’enjeux sociaux.",
+            "Développer une sensibilité à l’élégance intrinsèque des mathématiques."
+          ]
+        }
+      ],
 
-/* Ressources (exemples) */
-DATA.ressourcesParCompetence = {
-  C1: [
-    { type:"pdf",   name:"Fiche — Bases de la démarche déductive", meta:"PDF • 6 pages", href:"#"},
-    { type:"video", name:"Vidéo — Preuve & contre-exemple (intro)", meta:"Vidéo • 8 min", href:"#"},
-    { type:"web",   name:"Article — Réciproque vs contraposée", meta:"Lien web", href:"#"},
-  ],
-  C2: [
-    { type:"pdf",   name:"Mémo — Techniques algébriques essentielles", meta:"PDF • 4 pages", href:"#"},
-    { type:"web",   name:"Outil — Calculatrice CAS (simulateur)", meta:"Lien web", href:"#"},
-    { type:"video", name:"Vidéo — Vérifier la cohérence d’un résultat", meta:"Vidéo • 5 min", href:"#"},
-  ],
-  C3: [
-    { type:"pdf",   name:"Guide — Modéliser (schéma / algèbre / graphe)", meta:"PDF • 5 pages", href:"#"},
-    { type:"activity", name:"Activité — Méthodes standards de résolution", meta:"Exercices • 20 min", href:"#"},
-    { type:"web",   name:"Banque — Problèmes contextualisés", meta:"Lien web", href:"#"},
-  ],
-  C4: [
-    { type:"pdf",   name:"Conventions — Notations (CRM)", meta:"PDF • 3 pages", href:"#"},
-    { type:"video", name:"Vidéo — Expliquer un raisonnement à l’oral", meta:"Vidéo • 7 min", href:"#"},
-    { type:"web",   name:"Ressource — Choisir le bon registre", meta:"Lien web", href:"#"},
-  ],
-  C5: [
-    { type:"web",   name:"Dossier — Maths & autres disciplines", meta:"Lien web", href:"#"},
-    { type:"pdf",   name:"Chronologie — Grandes étapes historiques", meta:"PDF • 2 pages", href:"#"},
-    { type:"video", name:"Vidéo — Enjeux sociaux des applications", meta:"Vidéo • 10 min", href:"#"},
-  ]
-};
+      // Ressources par compétence (exemples)
+      ressourcesParCompetence: {
+        C1: [
+          { type:"pdf",   name:"Fiche — Bases de la démarche déductive", meta:"PDF • 6 pages", href:"#"},
+          { type:"video", name:"Vidéo — Preuve & contre-exemple (intro)", meta:"Vidéo • 8 min", href:"#"},
+          { type:"web",   name:"Article — Réciproque vs contraposée", meta:"Lien web", href:"#"},
+        ],
+        C2: [
+          { type:"pdf",   name:"Mémo — Techniques algébriques essentielles", meta:"PDF • 4 pages", href:"#"},
+          { type:"web",   name:"Outil — Calculatrice / simulateur", meta:"Lien web", href:"#"},
+          { type:"video", name:"Vidéo — Vérifier la cohérence d’un résultat", meta:"Vidéo • 5 min", href:"#"},
+        ],
+        C3: [
+          { type:"pdf",     name:"Guide — Modéliser (schéma / algèbre / graphe)", meta:"PDF • 5 pages", href:"#"},
+          { type:"activity",name:"Activité — Méthodes standards de résolution", meta:"Exercices • 20 min", href:"#"},
+          { type:"web",     name:"Banque — Problèmes contextualisés", meta:"Lien web", href:"#"},
+        ],
+        C4: [
+          { type:"pdf",   name:"Conventions — Notations (CRM)", meta:"PDF • 3 pages", href:"#"},
+          { type:"video", name:"Vidéo — Expliquer un raisonnement à l’oral", meta:"Vidéo • 7 min", href:"#"},
+          { type:"web",   name:"Ressource — Choisir le bon registre", meta:"Lien web", href:"#"},
+        ],
+        C5: [
+          { type:"web",   name:"Dossier — Maths & autres disciplines", meta:"Lien web", href:"#"},
+          { type:"pdf",   name:"Chronologie — Grandes étapes historiques", meta:"PDF • 2 pages", href:"#"},
+          { type:"video", name:"Vidéo — Enjeux sociaux des applications", meta:"Vidéo • 10 min", href:"#"},
+        ]
+      },
 
-/* --- Helpers --- */
-const elPills = document.getElementById("topPills");
-const elToc   = document.getElementById("toc");
-const elMain  = document.getElementById("content");
+      // Progression : années
+      years: [
+        { id:"y1", label:"1re année", comps:{
+          C1:["a) Identifier et utiliser le vocabulaire…","b) Comprendre et restituer…","c) Structurer une argumentation courte…"],
+          C2:["a) Utiliser les fondamentaux…","b) Vérifier la cohérence…","c) Utiliser un outil numérique simple…"],
+          C3:["a) Passer du texte à un schéma…","b) Choisir une méthode…","c) Présenter une réponse précise…"],
+          C4:["a) Employer correctement notations…","b) Lire un graphique…","c) Rédiger une résolution pas à pas…"],
+          C5:["a) Identifier une utilisation…","b) Citer une étape historique…","c) Repérer une application concrète…","d) Sensibilité à l’élégance…"]
+        }},
+        { id:"y2", label:"2e année", comps:{
+          C1:["a) Démonstration courte…","b) Critiquer un raisonnement…","c) Généraliser une conjecture…"],
+          C2:["a) Expressions plus complexes…","b) Stratégies de vérification…","c) Outil numérique (graphique)…"],
+          C3:["a) Modéliser contextualisé…","b) Méthode standard…","c) Interpréter dans le contexte…"],
+          C4:["a) Rédaction structurée…","b) Tableau ↔ graphe ↔ formule…","c) Oral 2–3 minutes…"],
+          C5:["a) Transposer modèle…","b) Personnages/étapes…","c) Usage des maths…","d) Élégance…"]
+        }},
+        { id:"y3", label:"3e année", comps:{
+          C1:["a) Structurer une preuve (analyse)…","b) Points faibles…","c) Argumentation logique…"],
+          C2:["a) Techniques d’analyse…","b) Méthodes croisées…","c) Outil numérique…"],
+          C3:["a) Optimisation…","b) Choisir une méthode…","c) Interpréter…"],
+          C4:["a) Raisonnement complet…","b) Plusieurs registres…","c) Oral argumenté…"],
+          C5:["a) Modéliser physique…","b) Perspective historique…","c) Perspective sociale…","d) Élégance…"]
+        }},
+        { id:"y4", label:"4e année", comps:{
+          C1:["a) Argumenter rigoureusement…","b) Critiquer un raisonnement…","c) Construire un plan de preuve…"],
+          C2:["a) Techniques avancées…","b) Vérifier cohérence…","c) CAS/graphique…"],
+          C3:["a) Modéliser intégrales/ED…","b) Choisir méthode…","c) Interpréter…"],
+          C4:["a) Rédaction propre…","b) Registres…","c) Oral complet…"],
+          C5:["a) Transposer disciplines…","b) Perspective historique…","c) Perspective sociale…","d) Élégance…"]
+        }},
+      ],
 
-let state = { viewId: "competences", chapterFilter: new Set(["ALL"]), query: "" };
+      compTitles: {
+        C1: "Compétence 1 : Raisonner de façon argumentée et rigoureuse",
+        C2: "Compétence 2 : Maîtriser les savoir-faire techniques en mathématiques",
+        C3: "Compétence 3 : Appréhender un problème à l’aide des outils mathématiques",
+        C4: "Compétence 4 : Communiquer à l'écrit et à l'oral en s'appuyant sur le langage symbolique et graphique",
+        C5: "Compétence 5 : Inscrire les mathématiques dans l’histoire, identifier des liens avec les autres disciplines et des enjeux actuels",
+      }
+    };
 
-function h(tag, attrs={}, children=[]){
-  const e = document.createElement(tag);
-  for (const [k,v] of Object.entries(attrs)){
-    if (k === "class") e.className = v;
-    else if (k === "html") e.innerHTML = v;
-    else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
-    else e.setAttribute(k, v);
-  }
-  for (const c of children){
-    if (c === null || c === undefined) continue;
-    e.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
-  }
-  return e;
-}
-function scrollToId(id){
-  const target = document.getElementById(id);
-  if (!target) return;
-  target.scrollIntoView({behavior:"smooth", block:"start"});
-}
+    // -----------------------
+    // Sidebar behavior
+    // -----------------------
+    document.getElementById("btnCollapseV").addEventListener("click", ()=>{
+      const tocWrap = document.getElementById("tocWrap");
+      const isHidden = tocWrap.classList.toggle("isHidden");
+      document.getElementById("btnCollapseV").textContent = isHidden ? "Déplier" : "Replier";
+    });
+    document.getElementById("btnCollapseH").addEventListener("click", ()=>{
+      document.getElementById("grid").classList.toggle("sidebarMini");
+    });
 
-/* --- Top pills + TOC --- */
-function renderPills(){
-  elPills.innerHTML = "";
-  DATA.nav.forEach(n=>{
-    elPills.appendChild(
-      h("button", {
-        class:"pill" + (state.viewId===n.id ? " active":""),
-        type:"button",
-        onclick: () => { state.viewId=n.id; renderAll(false); scrollToId(n.id); }
-      }, [n.label])
-    );
-  });
-}
-function renderToc(){
-  elToc.innerHTML = "";
-  DATA.nav.forEach(n=>{
-    elToc.appendChild(
-      h("li", {}, [
-        h("a", {href:"#"+n.id, onclick:(ev)=>{ev.preventDefault(); state.viewId=n.id; renderAll(false); scrollToId(n.id);} }, [n.label])
-      ])
-    );
-  });
-}
+    // -----------------------
+    // Resources
+    // -----------------------
+    function iconFor(type){
+      if(type==="pdf") return "📄";
+      if(type==="video") return "▶️";
+      if(type==="web") return "🔗";
+      if(type==="activity") return "🧩";
+      return "📌";
+    }
 
-/* --- Ressources panel --- */
-function iconFor(type){
-  if(type==="pdf") return "📄";
-  if(type==="video") return "▶️";
-  if(type==="web") return "🔗";
-  if(type==="activity") return "🧩";
-  return "📌";
-}
-function showResourcesFor(compCode){
-  const panel = document.getElementById("resourcesPanel");
-  const list  = document.getElementById("resList");
-  const resFor= document.getElementById("resFor");
+    function hideResources(){
+      document.getElementById("resourcesPanel").hidden = true;
+    }
+    document.getElementById("btnCloseRes").addEventListener("click", hideResources);
 
-  const res = (DATA.ressourcesParCompetence && DATA.ressourcesParCompetence[compCode]) || [];
-  if(res.length === 0){
-    panel.hidden = true;
-    return;
-  }
+    function showResourcesFor(compCode){
+      const panel = document.getElementById("resourcesPanel");
+      const list  = document.getElementById("resList");
+      const resFor= document.getElementById("resFor");
 
-  resFor.textContent = `Pour : ${compCode}`;
-  list.innerHTML = "";
+      const res = (DATA.ressourcesParCompetence && DATA.ressourcesParCompetence[compCode]) || [];
+      if(res.length === 0){
+        panel.hidden = true;
+        return;
+      }
 
-  res.forEach(r=>{
-    const item = h("div", {class:"resItem"}, [
-      h("div", {class:"resIcon", title:r.type}, [iconFor(r.type)]),
-      h("div", {class:"resBody"}, [
-        h("p", {class:"resName"}, [r.name]),
-        h("p", {class:"resMeta"}, [r.meta || ""]),
-        h("a", {class:"resLink", href:r.href || "#", target:"_blank", rel:"noopener"}, ["Ouvrir"])
-      ])
-    ]);
-    list.appendChild(item);
-  });
-
-  panel.hidden = false;
-}
-function hideResources(){
-  const panel = document.getElementById("resourcesPanel");
-  panel.hidden = true;
-}
-document.getElementById("btnCloseRes").addEventListener("click", hideResources);
-
-/* Sommaire pliable verticalement */
-document.getElementById("btnCollapseV").addEventListener("click", ()=>{
-  const tocWrap = document.getElementById("tocWrap");
-  const isHidden = tocWrap.classList.toggle("isHidden");
-  document.getElementById("btnCollapseV").textContent = isHidden ? "Déplier" : "Replier";
-});
-
-/* Sommaire pliable horizontalement */
-document.getElementById("btnCollapseH").addEventListener("click", ()=>{
-  document.getElementById("grid").classList.toggle("sidebarMini");
-});
-
-/* --- Sections --- */
-function renderSectionCompetences(){
-  return h("section", {class:"section", id:"competences"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼ Compétences clés en mathématiques"]),
-      h("p", {class:"mini"}, ["Clique sur une compétence pour afficher la déclinaison (a, b, c…) et les ressources à gauche."])
-    ]),
-
-    h("div", {class:"competences"}, [
-      h("details", {class:"comp c1", open:true, "data-comp":"C1"}, [
-        h("summary", {}, [
-          h("div", {class:"compLeft"}, [
-            h("span", {class:"chev"}, ["▶"]),
-            h("p", {class:"compTitle"}, ["C1 — Raisonner de façon argumentée et rigoureuse"])
-          ]),
-          h("span", {class:"badge"}, ["C1"])
-        ]),
-        h("div", {class:"compBody"}, [
-          h("ol", {class:"subpoints", type:"a"}, [
-            h("li", {}, ["Acquérir les bases de la démarche déductive : définition, axiome, conjecture, démonstration, théorème, hypothèse, conclusion, contre-exemple, implication, réciproque, contraposée."]),
-            h("li", {}, ["Être capable de comprendre, critiquer et restituer un raisonnement mathématique ou logique."]),
-            h("li", {}, ["Produire une pensée logique et abstraite structurée."])
+      resFor.textContent = `Pour : ${compCode}`;
+      list.innerHTML = "";
+      res.forEach(r=>{
+        list.appendChild(
+          h("div",{class:"resItem"},[
+            h("div",{class:"resIcon", title:r.type},[iconFor(r.type)]),
+            h("div",{class:"resBody"},[
+              h("p",{class:"resName"},[r.name]),
+              h("p",{class:"resMeta"},[r.meta || ""]),
+              h("a",{class:"resLink", href:r.href || "#", target:"_blank", rel:"noopener"},["Ouvrir"])
+            ])
           ])
-        ])
-      ]),
+        );
+      });
 
-      h("div", {class:"trait"}, []),
+      panel.hidden = false;
 
-      h("details", {class:"comp c2", "data-comp":"C2"}, [
-        h("summary", {}, [
-          h("div", {class:"compLeft"}, [
-            h("span", {class:"chev"}, ["▶"]),
-            h("p", {class:"compTitle"}, ["C2 — Maîtriser les savoir-faire techniques en mathématiques"])
+      // Si la sidebar est “mini”, on la ré-ouvre pour voir les ressources
+      const grid = document.getElementById("grid");
+      if(grid.classList.contains("sidebarMini")) grid.classList.remove("sidebarMini");
+    }
+    // rendre accessible globalement si besoin
+    window.showResourcesFor = showResourcesFor;
+
+    // -----------------------
+    // Render: top pills + toc
+    // -----------------------
+    function renderNav(){
+      const pills = document.getElementById("topPills");
+      pills.innerHTML = "";
+      DATA.nav.forEach((it, idx)=>{
+        const btn = h("button", {
+          class:"pill-btn",
+          type:"button",
+          "data-id": it.id,
+          "aria-current": idx===0 ? "true" : "false",
+          onclick: ()=>{
+            setActivePill(it.id);
+            smoothScrollTo(it.id);
+          }
+        }, [it.label]);
+        pills.appendChild(btn);
+      });
+
+      const toc = document.getElementById("toc");
+      toc.innerHTML = "";
+      DATA.nav.forEach(it=>{
+        toc.appendChild(h("li",{},[
+          h("a",{href:"#"+it.id, onclick:(e)=>{e.preventDefault(); setActivePill(it.id); smoothScrollTo(it.id);} },[it.label])
+        ]));
+      });
+    }
+
+    function setActivePill(id){
+      document.querySelectorAll("#topPills .pill-btn").forEach(b=>{
+        b.setAttribute("aria-current", b.getAttribute("data-id") === id ? "true" : "false");
+      });
+    }
+
+    // -----------------------
+    // Render: Competences
+    // -----------------------
+    function renderCompetences(){
+      const mount = document.getElementById("competencesMount");
+      mount.innerHTML = "";
+
+      DATA.competences.forEach((c, idx)=>{
+        const det = h("details", {class:`comp ${c.cls}`, "data-comp": c.code, open: idx===0}, [
+          h("summary",{},[
+            h("div",{class:"compLeft"},[
+              h("span",{class:"chev"},["▶"]),
+              h("p",{class:"compTitle"},[c.title]),
+            ]),
+            h("span",{class:"badge"},[c.code])
           ]),
-          h("span", {class:"badge"}, ["C2"])
-        ]),
-        h("div", {class:"compBody"}, [
-          h("ol", {class:"subpoints", type:"a"}, [
-            h("li", {}, ["Savoir utiliser les fondamentaux de niveau gymnasial en arithmétique, algèbre, analyse, géométrie, logique, probabilités et statistiques."]),
-            h("li", {}, ["Développer des stratégies pour porter un regard critique dynamique sur un processus de résolution : prévoir, analyser et vérifier la cohérence d’un résultat."]),
-            h("li", {}, ["Utiliser efficacement les moyens numériques à disposition."])
+          h("div",{class:"compBody"},[
+            h("ol",{class:"subpoints", type:"a"}, c.points.map(p=>h("li",{},[p])))
           ])
-        ])
-      ]),
+        ]);
 
-      h("div", {class:"trait"}, []),
+        det.addEventListener("toggle", ()=>{
+          if(det.open){
+            // 1 ouvert à la fois
+            mount.querySelectorAll("details.comp").forEach(o=>{ if(o!==det) o.open=false; });
+            showResourcesFor(c.code);
+          } else {
+            hideResources();
+          }
+        });
 
-      h("details", {class:"comp c3", "data-comp":"C3"}, [
-        h("summary", {}, [
-          h("div", {class:"compLeft"}, [
-            h("span", {class:"chev"}, ["▶"]),
-            h("p", {class:"compTitle"}, ["C3 — Appréhender un problème à l’aide des outils mathématiques"])
-          ]),
-          h("span", {class:"badge"}, ["C3"])
-        ]),
-        h("div", {class:"compBody"}, [
-          h("ol", {class:"subpoints", type:"a"}, [
-            h("li", {}, ["Modéliser un problème en mobilisant le registre adéquat (schématique, algébrique, graphique)."]),
-            h("li", {}, ["Appliquer des méthodes standards de résolution de problèmes (se ramener à un cas connu, étudier un cas particulier, introduire un élément auxiliaire, etc.) et choisir les savoir-faire techniques adéquats."]),
-            h("li", {}, ["Porter un regard critique et interpréter des résultats dans différents contextes (notamment évaluer la précision attendue) dans une réponse (valeur exacte, arrondi, chiffres significatifs)."])
-          ])
-        ])
-      ]),
+        mount.appendChild(det);
 
-      h("div", {class:"trait"}, []),
+        if(idx < DATA.competences.length-1) mount.appendChild(h("div",{class:"trait"}));
+      });
+    }
 
-      h("details", {class:"comp c4", "data-comp":"C4"}, [
-        h("summary", {}, [
-          h("div", {class:"compLeft"}, [
-            h("span", {class:"chev"}, ["▶"]),
-            h("p", {class:"compTitle"}, ["C4 — Communiquer à l’écrit et à l’oral en s’appuyant sur le langage symbolique et graphique"])
-          ]),
-          h("span", {class:"badge"}, ["C4"])
-        ]),
-        h("div", {class:"compBody"}, [
-          h("ol", {class:"subpoints", type:"a"}, [
-            h("li", {}, ["Utiliser de façon précise les notations, symboles et définitions mathématiques selon les conventions définies par la Commission Romande de Mathématique."]),
-            h("li", {}, ["Utiliser les différents registres de représentations (graphique, algébrique, schématique et textuel) selon leur pertinence."]),
-            h("li", {}, ["Produire une argumentation claire et structurée, à l’écrit et à l’oral."])
-          ])
-        ])
-      ]),
+    // -----------------------
+    // Render: Progression (year grid -> detail)
+    // -----------------------
+    let progressionState = { selectedYear: null };
 
-      h("div", {class:"trait"}, []),
+    function yearClassFromId(id){ return id; } // y1..y4 matches CSS classes
 
-      h("details", {class:"comp c5", "data-comp":"C5"}, [
-        h("summary", {}, [
-          h("div", {class:"compLeft"}, [
-            h("span", {class:"chev"}, ["▶"]),
-            h("p", {class:"compTitle"}, ["C5 — Inscrire les mathématiques dans l’histoire, identifier des liens avec les autres disciplines et des enjeux actuels"])
-          ]),
-          h("span", {class:"badge"}, ["C5"])
-        ]),
-        h("div", {class:"compBody"}, [
-          h("ol", {class:"subpoints", type:"a"}, [
-            h("li", {}, ["Transposer les mathématiques dans les autres disciplines (en particulier biologie, chimie, économie, géographie, informatique, physique)."]),
-            h("li", {}, ["Avoir une vision des mathématiques dans une perspective historique (connaître quelques grandes étapes et personnages historiques)."]),
-            h("li", {}, ["Avoir une vision des mathématiques dans une perspective sociale, de leur utilité et des applications possibles, y compris en termes d’enjeux sociaux."]),
-            h("li", {}, ["Développer une sensibilité à l’élégance intrinsèque des mathématiques."])
-          ])
-        ])
-      ])
-    ])
-  ]);
-}
+    function renderYearGrid(mount){
+      const grid = h("div",{class:"yearGrid"},[]);
+      DATA.years.forEach(y=>{
+        const tile = h("div",{class:`yearTile ${yearClassFromId(y.id)}`, role:"button", tabindex:"0"},[
+          h("p",{class:"yearTileTitle"},[y.label]),
+          h("p",{class:"yearTileSub"},["Voir les sous-compétences par compétence (C1…C5)"]),
+          h("span",{class:"yearTileTag"},["Ouvrir la vue détaillée"])
+        ]);
+        const open = ()=>{
+          progressionState.selectedYear = y.id;
+          renderProgression();
+        };
+        tile.addEventListener("click", open);
+        tile.addEventListener("keydown", (e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); open(); }});
+        grid.appendChild(tile);
+      });
+      mount.appendChild(grid);
+    }
 
-function renderSectionProgression(){
-  return h("section", {class:"section", id:"progression"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼ Progression (1re → 4e)"]),
-      h("div", {class:"muted"}, [""])
-    ]),
-    h("p", {class:"mini"}, ["Vue synthèse par année (à enrichir)."]),
-    ...DATA.progressionParAnnee.map(a =>
-      h("details", {class:"accordion", open:false}, [
-        h("summary", {}, [a.annee, h("span",{class:"muted"},["▼"])]),
-        h("div", {class:"accBody"}, [
-          h("ul", {class:"bullets"}, a.points.map(x=>h("li",{},[x])))
-        ])
-      ])
-    )
-  ]);
-}
+    function renderYearDetail(mount, yearObj){
+      const wrap = h("div",{class: yearClassFromId(yearObj.id)},[]);
 
-function normalizeTags(tags){ return tags.map(t=>t.trim()); }
-function itemMatchesFilters(item){
-  const q = state.query.trim().toLowerCase();
-  if (q && !item.titre.toLowerCase().includes(q)) return false;
-
-  const active = [...state.chapterFilter];
-  if (active.includes("ALL")) return true;
-
-  const tags = normalizeTags(item.tags || []);
-  return active.some(f => tags.includes(f));
-}
-
-function renderSectionDecoupages(){
-  const chapter = DATA.decoupages.chapitres[0];
-  const allFilters = ["ALL","C1","C2","C3","C4","C5","CdB","L","T","N"];
-
-  return h("section", {class:"section", id:"decoupages"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼ Découpages annuels / Vues dynamiques"]),
-      h("div", {class:"muted"}, [""])
-    ]),
-    h("p", {class:"mini"}, [
-      DATA.decoupages.annee, " — ", h("span",{class:"k"},["exemple"]), " : filtrage par compétence / tags."
-    ]),
-    h("details", {class:"accordion", open:true}, [
-      h("summary", {}, [chapter.titre, h("span",{class:"muted"},["▲"])]),
-      h("div", {class:"accBody"}, [
-        h("div", {class:"searchRow"}, [
-          h("input", {
-            type:"search",
-            placeholder:"Rechercher dans le chapitre… (ex: “racines”, “démonstration”)",
-            value: state.query,
-            oninput:(ev)=>{ state.query = ev.target.value; renderAll(false); }
-          }),
-          h("span", {class:"muted"}, ["Astuce : clique sur C1/C2/… pour reproduire les “Vues disponibles”."])
-        ]),
-        h("div", {class:"chips"}, allFilters.map(f => {
-          const active = state.chapterFilter.has(f);
-          return h("button", {
-            class:"chip" + (active ? " active":""),
+      // Nav bar
+      const nav = h("div",{class:"yearNavBar"},[
+        h("button",{class:"backLink", type:"button", onclick:()=>{
+          progressionState.selectedYear = null;
+          renderProgression();
+        }},["← Retour aux années"]),
+        h("div",{class:"yearBtns", id:"yearBtns"},[])
+      ]);
+      const btns = nav.querySelector("#yearBtns");
+      DATA.years.forEach(y=>{
+        btns.appendChild(
+          h("button",{
+            class:"yearBtn"+(y.id===yearObj.id ? " active" : ""),
             type:"button",
             onclick:()=>{
-              if (f === "ALL"){
-                state.chapterFilter = new Set(["ALL"]);
-              } else {
-                if (state.chapterFilter.has("ALL")) state.chapterFilter.delete("ALL");
-                if (state.chapterFilter.has(f)) state.chapterFilter.delete(f);
-                else state.chapterFilter.add(f);
-                if (state.chapterFilter.size === 0) state.chapterFilter.add("ALL");
-              }
-              renderAll(false);
+              progressionState.selectedYear = y.id;
+              renderProgression();
             }
-          }, [f]);
-        })),
-        h("div", {class:"items", id:"chapterItems"})
-      ])
-    ])
-  ]);
-}
+          },[y.label])
+        );
+      });
 
-function renderChapterItems(){
-  const holder = document.getElementById("chapterItems");
-  if (!holder) return;
-  holder.innerHTML = "";
+      wrap.appendChild(nav);
 
-  const chapter = DATA.decoupages.chapitres[0];
-  const filtered = chapter.items.filter(itemMatchesFilters);
+      // Cards
+      const grid = h("div",{class:"progressGrid"},[]);
+      ["C1","C2","C3","C4","C5"].forEach(code=>{
+        const subs = yearObj.comps?.[code];
+        if(!subs || subs.length===0) return;
 
-  holder.appendChild(
-    h("p", {class:"mini"}, [
-      "Résultats : ",
-      h("strong", {}, [String(filtered.length)]),
-      " / ",
-      String(chapter.items.length),
-      " — filtres actifs : ",
-      h("span",{class:"k"}, [[...state.chapterFilter].join(", ")]),
-      state.query.trim() ? (" — recherche : “" + state.query.trim() + "”") : ""
-    ])
-  );
+        const card = h("div",{class:`progCard ${code.toLowerCase()}`, role:"button", tabindex:"0"},[
+          h("div",{class:"progCardHead"},[
+            h("div",{},[
+              h("p",{class:"progCardTitle"},[DATA.compTitles[code] || code]),
+              h("p",{class:"progCardSub"},[yearObj.label])
+            ]),
+            h("span",{class:"progBadge"},[code])
+          ]),
+          h("div",{class:"progCardBody"},[
+            h("ul",{class:"progList"}, subs.map(x=>h("li",{},[x])))
+          ])
+        ]);
 
-  filtered.forEach(it=>{
-    holder.appendChild(
-      h("div", {class:"item"}, [
-        h("div", {class:"itemTop"}, [
-          h("p", {class:"itemTitle"}, [it.titre]),
-          h("div", {class:"badges"}, (it.tags||[]).map(t=>h("span",{class:"badge"},[t])))
-        ])
-      ])
-    );
-  });
+        const openRes = ()=>showResourcesFor(code);
+        card.addEventListener("click", openRes);
+        card.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openRes(); }});
 
-  if (filtered.length === 0){
-    holder.appendChild(h("div",{class:"note"},[
-      "Aucun item ne correspond à ces filtres/recherche. ",
-      h("span",{class:"muted"},["(Essaie ALL ou enlève un filtre.)"])
-    ]));
-  }
-}
+        grid.appendChild(card);
+      });
 
-function renderSectionAcquisCO(){
-  return h("section", {class:"section", id:"acquisCO"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼ Acquis du CO (référence)"]),
-      h("div", {class:"muted"}, [""])
-    ]),
-    h("p", {class:"mini"}, ["Référentiel d’entrée (acquis avant le collège)."]),
-    ...DATA.acquisCO.map(b =>
-      h("details", {class:"accordion", open:false}, [
-        h("summary", {}, [b.bloc, h("span",{class:"muted"},["▼"])]),
-        h("div", {class:"accBody"}, [
-          h("ul", {class:"bullets"}, b.items.map(x=>h("li",{},[x])))
-        ])
-      ])
-    )
-  ]);
-}
+      wrap.appendChild(grid);
+      mount.appendChild(wrap);
+    }
 
-function renderSectionPhase2(){
-  return h("section", {class:"section", id:"phase2"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼ Phase 2 : IA et numérique"]),
-      h("div", {class:"muted"}, [""])
-    ]),
-    h("div", {class:"note"}, [DATA.phase2.note])
-  ]);
-}
-function renderSectionPhase3(){
-  return h("section", {class:"section", id:"phase3"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼ Phase 3 : transversalité"]),
-      h("div", {class:"muted"}, [""])
-    ]),
-    h("div", {class:"note"}, [DATA.phase3.note])
-  ]);
-}
+    function renderProgression(){
+      const mount = document.getElementById("progressionMount");
+      mount.innerHTML = "";
 
-/* --- Render all --- */
-function renderAll(doScroll){
-  renderPills();
-  renderToc();
-
-  elMain.innerHTML = "";
-  elMain.appendChild(renderSectionCompetences());
-  elMain.appendChild(renderSectionProgression());
-  elMain.appendChild(renderSectionDecoupages());
-  elMain.appendChild(renderSectionAcquisCO());
-  elMain.appendChild(renderSectionPhase2());
-  elMain.appendChild(renderSectionPhase3());
-
-  renderChapterItems();
-  wireCompetences();
-
-  if (doScroll) scrollToId(state.viewId);
-}
-
-/* Interactions : 1 compétence ouverte à la fois + ressources à gauche */
-function wireCompetences(){
-  document.querySelectorAll('details.comp').forEach(d => {
-    // Evite de doubler les listeners si renderAll est appelé plusieurs fois
-    if (d.__wired) return;
-    d.__wired = true;
-
-    d.addEventListener('toggle', () => {
-      const code = d.getAttribute("data-comp");
-
-      if (d.open){
-        document.querySelectorAll('details.comp').forEach(other => {
-          if (other !== d) other.open = false;
-        });
-        if(code) showResourcesFor(code);
-      } else {
-        hideResources();
+      if(progressionState.selectedYear == null){
+        renderYearGrid(mount);
+        return;
       }
-    });
-  });
-}
+      const y = DATA.years.find(x=>x.id===progressionState.selectedYear) || DATA.years[0];
+      renderYearDetail(mount, y);
+    }
 
-/* Init */
-renderAll(false);
-/* Affiche les ressources de C1 (ouverte par défaut) */
-showResourcesFor("C1");
-</script>
+    // -----------------------
+    // Init
+    // -----------------------
+    renderNav();
+    renderCompetences();
+    renderProgression();
+
+    // Bonus: set pill active on scroll (simple)
+    const sections = DATA.nav.map(x=>document.getElementById(x.id)).filter(Boolean);
+    const obs = new IntersectionObserver((entries)=>{
+      const visible = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
+      if(visible && visible.target?.id) setActivePill(visible.target.id);
+    }, {root:null, threshold:[0.2,0.35,0.5]});
+    sections.forEach(s=>obs.observe(s));
+  </script>
 </body>
 </html>
