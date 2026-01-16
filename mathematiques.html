@@ -2,412 +2,772 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Plan d’étude cantonal – Mathématique</title>
-
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Plan d’étude cantonal — Mathématiques (version “web”)</title>
   <style>
     :root{
-      --bg:#ffffff;
-      --ink:#1f2937;
+      --bg:#f6f7fb;
+      --card:#ffffff;
+      --border:#e6e8f0;
+      --text:#111827;
       --muted:#6b7280;
-      --line:#e5e7eb;
-      --accent:#2563eb;
-      --card:#f8fafc;
+      --blue:#2563eb;
+      --blue-weak:#e8efff;
+      --shadow:0 10px 30px rgba(17,24,39,.06);
+      --radius:16px;
+      --radius2:12px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
-
-    html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);font:16px/1.55 system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;}
-    a{color:var(--accent);text-decoration:none}
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:var(--sans);
+      color:var(--text);
+      background:var(--bg);
+      line-height:1.45;
+    }
+    a{color:var(--blue); text-decoration:none}
     a:hover{text-decoration:underline}
-
-    .wrap{max-width:1100px;margin:0 auto;padding:24px 14px 56px;}
-
-    header{
-      padding:18px 18px 14px;
-      border:1px solid var(--line);
-      background:linear-gradient(180deg,#f9fafb, #ffffff);
-      border-radius:14px;
+    .wrap{
+      max-width:1200px;
+      margin:24px auto;
+      padding:0 16px 32px;
     }
-    header h1{margin:0 0 6px;font-size:28px;letter-spacing:-0.02em}
-    header p{margin:0;color:var(--muted)}
 
-    .chips{margin-top:10px;display:flex;flex-wrap:wrap;gap:8px}
-    .pillbtn{
-      appearance:none;
-      border:1px solid var(--line);
+    /* Header */
+    .header{
       background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      padding:20px 20px 14px;
+      box-shadow:var(--shadow);
+    }
+    .title{
+      margin:0 0 4px;
+      font-size:26px;
+      letter-spacing:-0.02em;
+    }
+    .subtitle{
+      margin:0 0 12px;
       color:var(--muted);
-      font-size:12px;
-      padding:6px 10px;
+      font-size:14px;
+    }
+
+    /* Pills (comme capture) */
+    .pills{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      padding:6px 0 0;
+    }
+    .pill{
+      border:1px solid var(--border);
+      background:#fff;
+      color:#374151;
+      padding:7px 10px;
       border-radius:999px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+      transition:.15s transform, .15s background, .15s border-color;
+    }
+    .pill:hover{transform:translateY(-1px)}
+    .pill.active{
+      border-color:#cfe0ff;
+      background:var(--blue-weak);
+      color:#1d4ed8;
+      font-weight:600;
+    }
+
+    /* Layout */
+    .grid{
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:16px;
+      margin-top:16px;
+      align-items:start;
+    }
+    @media (max-width: 980px){
+      .grid{grid-template-columns:1fr}
+    }
+    .card{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+    }
+
+    /* Sidebar */
+    .side{
+      padding:14px;
+      position:sticky;
+      top:16px;
+    }
+    @media (max-width: 980px){
+      .side{position:relative; top:auto}
+    }
+    .side h3{
+      margin:6px 0 10px;
+      font-size:14px;
+      letter-spacing:.02em;
+      text-transform:none;
+    }
+    .toc{
+      margin:0;
+      padding-left:16px;
+      color:#1f2937;
+      font-size:14px;
+    }
+    .toc li{margin:6px 0}
+    .toc a{color:#1d4ed8}
+    .toc small{color:var(--muted)}
+
+    /* Main */
+    .main{padding:14px}
+    .section{
+      border:1px solid var(--border);
+      border-radius:var(--radius2);
+      background:#fff;
+      padding:14px;
+      margin-bottom:12px;
+    }
+    .sectionHead{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .sectionTitle{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-weight:800;
+      margin:0;
+      font-size:20px;
+      letter-spacing:-0.02em;
+    }
+    .mini{
+      margin:8px 0 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* Accordions */
+    details.accordion{
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fbfcff;
+      margin-top:10px;
+      overflow:hidden;
+    }
+    details.accordion > summary{
+      list-style:none;
+      cursor:pointer;
+      padding:11px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:700;
+      user-select:none;
+    }
+    details.accordion > summary::-webkit-details-marker{display:none}
+    .accBody{padding:0 12px 12px}
+    .accBody p{margin:10px 0}
+    .bullets{margin:8px 0 0; padding-left:18px}
+    .bullets li{margin:6px 0}
+
+    /* Chips for filters */
+    .chips{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:10px;
+    }
+    .chip{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:13px;
       cursor:pointer;
       user-select:none;
     }
-    .pillbtn:hover{ border-color: var(--accent); color: var(--accent); }
-    .pillbtn:focus{ outline: 2px solid rgba(37,99,235,.30); outline-offset:2px; }
-
-    .grid{
-      display:grid;
-      grid-template-columns: 280px 1fr;
-      gap:18px;
-      margin-top:18px;
+    .chip.active{
+      background:var(--blue-weak);
+      border-color:#cfe0ff;
+      color:#1d4ed8;
+      font-weight:700;
     }
 
-    /* Sommaire rétractable */
-    #toc{
-      position:sticky; top:14px;
-      align-self:start;
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:10px 12px;
-      background:#fff;
+    /* Lists / items */
+    .items{
+      margin-top:10px;
+      border-top:1px solid var(--border);
+      padding-top:10px;
     }
-    #toc > summary{
-      cursor:pointer;
-      font-weight:800;
-      list-style:none;
-    }
-    #toc > summary::-webkit-details-marker{display:none}
-
-    nav ul{margin:10px 0 0;padding-left:18px}
-    nav li{margin:6px 0}
-
-    main .card{
-      border:1px solid var(--line);
-      border-radius:14px;
-      padding:18px;
-      background:#fff;
-      margin-bottom:16px;
-    }
-
-    h2{margin:0 0 8px;font-size:22px;letter-spacing:-0.01em}
-    h3{margin:16px 0 8px;font-size:18px}
-    .meta{color:var(--muted);font-size:14px;margin-top:6px}
-
-    /* Accordéons */
-    details{
-      border:1px solid var(--line);
+    .item{
+      padding:10px 10px;
+      border:1px solid var(--border);
       border-radius:12px;
-      padding:10px 12px;
-      background:var(--card);
-      margin:10px 0;
-    }
-    summary{cursor:pointer;font-weight:700}
-    summary::-webkit-details-marker{display:none}
-    summary:after{content:"▾"; float:right; color:var(--muted)}
-    details[open] summary:after{content:"▴"}
-
-    /* Phases rétractables (un peu plus “section”) */
-    .phase{
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:#fff;
-      padding:14px 16px;
-      margin-bottom:16px;
-    }
-    .phase > summary{
-      font-weight:900;
-      font-size:20px;
-    }
-    .phase > summary:after{content:"▾"; float:right; color:var(--muted)}
-    .phase[open] > summary:after{content:"▴"}
-    .phase section{margin-top:10px}
-
-    .two-col{
-      display:grid;
-      grid-template-columns: 320px 1fr;
-      gap:14px;
-    }
-    .box{
-      border:1px dashed var(--line);
-      border-radius:12px;
-      padding:12px;
+      margin:8px 0;
       background:#fff;
     }
-    .k{color:var(--muted);font-size:13px;margin:0 0 6px}
-    ul{margin:6px 0 0}
-
-    .backtotop{
-      text-align:center;
-      margin:22px 0 0;
+    .itemTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
     }
-    .backtotop a{
-      display:inline-block;
-      padding:8px 12px;
-      border:1px solid var(--line);
+    .itemTitle{
+      margin:0;
+      font-weight:700;
+    }
+    .badges{
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+      justify-content:flex-end;
+      min-width:160px;
+    }
+    .badge{
+      font-family:var(--mono);
+      font-size:12px;
+      padding:3px 7px;
       border-radius:999px;
-      background:var(--card);
-      color:var(--ink);
+      border:1px solid var(--border);
+      background:#fff;
+      color:#111827;
+      white-space:nowrap;
     }
 
-    @media (max-width: 940px){
-      .wrap{max-width:100%;padding:18px 12px 44px;}
-      .grid{grid-template-columns:1fr}
-      #toc{position:relative; top:auto}
-      .two-col{grid-template-columns:1fr}
+    .note{
+      border-left:3px solid #c7d2fe;
+      padding:8px 10px;
+      margin:10px 0;
+      background:#f5f7ff;
+      color:#1f2937;
+      border-radius:10px;
+      font-size:13px;
     }
+    .k{
+      font-family:var(--mono);
+      background:#f3f4f6;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid #e5e7eb;
+    }
+
+    .searchRow{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    input[type="search"]{
+      flex:1;
+      min-width:240px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    input[type="search"]:focus{
+      border-color:#cfe0ff;
+      box-shadow:0 0 0 4px rgba(37,99,235,.08);
+    }
+    .muted{color:var(--muted)}
   </style>
 </head>
 
 <body>
-  <div class="wrap" id="top">
-    <header>
-      <h1>Plan d’étude cantonal – Français</h1>
-      <p>Collège de Genève — version “web” (travail en cours)</p>
+  <div class="wrap">
+    <header class="header" id="top">
+      <h1 class="title">Plan d’étude cantonal — Mathématiques</h1>
+      <p class="subtitle">Collège de Genève — version “web” (travail en cours)</p>
 
-      <!-- Boutons cliquables (raccourcis) -->
-      <div class="chips" role="navigation" aria-label="Raccourcis">
-        <button class="pillbtn" data-action="phase1">Phase 1</button>
-        <button class="pillbtn" data-action="etape1">Étape 1</button>
-        <button class="pillbtn" data-action="competences">Compétences clés</button>
-        <button class="pillbtn" data-action="etape2">Progression (1re → 4e)</button>
-        <button class="pillbtn" data-action="liens-disciplines">Liens autres disciplines</button>
-        <button class="pillbtn" data-action="phase2">Phase 2 : IA & numérique</button>
-        <button class="pillbtn" data-action="phase3">Phase 3 : transversalité</button>
-      </div>
+      <!-- Boutons en clair (comme capture) -->
+      <div class="pills" id="topPills"></div>
     </header>
 
     <div class="grid">
-      <!-- Sommaire rétractable -->
-      <details id="toc" open>
-        <summary>Sommaire</summary>
-        <nav aria-label="Table des matières">
-          <ul>
-            <li><a href="#phase1">Phase 1</a>
-              <ul>
-                <li><a href="#etape1">Étape 1 — Présentation</a></li>
-                <li><a href="#competences">Compétences clés en français</a></li>
-                <li><a href="#etape2">Étape 2 — Progression</a></li>
-                <li><a href="#liens-disciplines">Liens avec les autres disciplines</a></li>
-              </ul>
-            </li>
-            <li><a href="#phase2">Phase 2 — IA & numérique</a></li>
-            <li><a href="#phase3">Phase 3 — Transversalité</a></li>
-          </ul>
-        </nav>
-      </details>
+      <!-- Sommaire -->
+      <aside class="card side">
+        <h3>Sommaire</h3>
+        <ul class="toc" id="toc"></ul>
+        <p class="mini"><small>Astuce : les boutons en haut changent de vue, le sommaire t’amène directement à la section.</small></p>
+      </aside>
 
-      <main>
-        <!-- PHASE 1 (rétractable) -->
-        <details id="phase1" class="phase" open>
-          <summary>Phase 1</summary>
-          <section>
-            <p class="meta">Étape 1 : Présentation de la discipline + Compétences clés. Étape 2 : Découpages annuels / progression / enchaînements des contenus.</p>
-
-            <!-- Étape 1 -->
-            <details id="etape1">
-              <summary>Étape 1 — Présentation de la discipline (Français)</summary>
-              <p>
-                La visée la plus haute de l’enseignement du français comme langue première est de favoriser un rapport vivant et personnel
-                de l’élève avec la langue et les idées, d’inciter à la fois au décentrement et à la quête de soi.
-                Les compétences proposées sont au service de cette visée, dans une atmosphère de confiance et de liberté favorisant la pensée critique.
-              </p>
-              <p>
-                Les œuvres littéraires constituent le point de départ et la finalité privilégiés : elles permettent compréhension de soi, d’autrui,
-                du monde et de la vie ; elles situent historiquement et socialement, ouvrent à d’autres mondes culturels, développent le sens esthétique
-                et éclairent les liens entre littérature, arts et domaines de la pensée.
-              </p>
-            </details>
-
-            <!-- Compétences -->
-            <details id="competences">
-              <summary>Compétences clés en français</summary>
-
-              <h3>Compétence 1 : Lire, comprendre et interpréter des textes</h3>
-              <ul>
-                <li>Construire une lecture critique et nuancée de textes variés.</li>
-                <li>Contextualiser enjeux thématiques, stylistiques, culturels et historiques.</li>
-                <li>Interprétation personnelle et argumentée.</li>
-              </ul>
-
-              <h3>Compétence 2 : Produire des textes</h3>
-              <ul>
-                <li>Rédiger des textes cohérents et structurés.</li>
-                <li>Adapter langue, style et registre au contexte.</li>
-                <li>Argumenter avec références pertinentes.</li>
-              </ul>
-
-              <h3>Compétence 3 : Écouter et prendre la parole</h3>
-              <ul>
-                <li>Dialoguer de manière active et critique.</li>
-                <li>Argumenter à l’oral de façon structurée.</li>
-              </ul>
-
-              <h3>Compétence 4 : Pratiquer la langue et la littérature</h3>
-              <ul>
-                <li>Posture réflexive face aux enjeux de la communication.</li>
-                <li>Comprendre le rôle culturel et citoyen de la langue.</li>
-              </ul>
-            </details>
-
-            <!-- Étape 2 -->
-            <details id="etape2">
-              <summary>Étape 2 — Découpages annuels / Progression des compétences / Enchaînements des contenus</summary>
-
-              <details>
-                <summary>À la fin de la 1ère année</summary>
-                <div class="two-col">
-                  <div class="box">
-                    <p class="k"><strong>Compétence 1</strong> — Lire, comprendre et interpréter</p>
-                    <ul>
-                      <li>Lecture d’œuvres intégrales (genres différents).</li>
-                      <li>Outils : dictionnaire, synthèse, personnages, intrigue, premières notions d’analyse.</li>
-                    </ul>
-                  </div>
-                  <div class="box">
-                    <p class="k"><strong>Corpus</strong> (exemples)</p>
-                    <ul>
-                      <li>Moyen Âge – XVIe : roman courtois, satire, farce…</li>
-                      <li>Renaissance : Rabelais, Montaigne…</li>
-                      <li>Une œuvre contemporaine suisse-romande</li>
-                    </ul>
-                  </div>
-                </div>
-              </details>
-
-              <details>
-                <summary>À la fin de la 2ème année</summary>
-                <ul>
-                  <li>Consolider les techniques de lecture acquises en 1re.</li>
-                  <li>Dissertation ~700 mots (800 avec citations).</li>
-                </ul>
-              </details>
-
-              <details>
-                <summary>À la fin de la 3ème année</summary>
-                <ul>
-                  <li>Commentaire composé ~800 mots.</li>
-                  <li>Textes au contexte historique plus complexe.</li>
-                </ul>
-              </details>
-
-              <details>
-                <summary>À la fin de la 4ème année</summary>
-                <ul>
-                  <li>Commentaire composé ~1000 mots.</li>
-                  <li>Intertextualité, littérature comparée, perspectives culturelles.</li>
-                </ul>
-              </details>
-            </details>
-
-            <!-- Liens disciplines -->
-            <details id="liens-disciplines">
-              <summary>Liens avec les autres disciplines (extraits)</summary>
-              <ul>
-                <li>Histoire</li>
-                <li>Philosophie</li>
-                <li>Dispositif oralité</li>
-                <li>Liens externes (selon le document)</li>
-              </ul>
-            </details>
-          </section>
-        </details>
-
-        <!-- PHASE 2 (rétractable) -->
-        <details id="phase2" class="phase" open>
-          <summary>Phase 2 : IA et numérique</summary>
-          <section>
-            <ul>
-              <li>Enjeux liés à l’IA</li>
-              <li>Place à donner à l’IA</li>
-              <li>Ressources numériques</li>
-            </ul>
-            <p class="meta">Cette partie est indiquée comme section à développer dans le document.</p>
-          </section>
-        </details>
-
-        <!-- PHASE 3 (rétractable) -->
-        <details id="phase3" class="phase" open>
-          <summary>Phase 3 : ajout de transversalité</summary>
-          <section>
-            <ul>
-              <li>Ressources en relation avec le thème annuel EDD/CIT</li>
-              <li>Propositions d’activités « CdBA FR/MA »</li>
-              <li>Propositions d’activités « Compétences transversales »</li>
-            </ul>
-            <p class="meta">Cette partie est indiquée comme section à développer dans le document.</p>
-          </section>
-        </details>
-
-        <!-- Haut de page en bas -->
-        <div class="backtotop">
-          <a href="#top">↥ Haut de page</a>
-        </div>
-      </main>
+      <!-- Contenu -->
+      <main class="card main" id="content"></main>
     </div>
   </div>
 
-  <script>
-    // Ferme uniquement les <details> "niveau 1" à l’intérieur de Phase 1 (etape1/competences/etape2/liens)
-    function closePhase1InnerDetails() {
-      const phase1 = document.getElementById("phase1");
-      if (!phase1) return;
-      const inner = Array.from(phase1.querySelectorAll("section > details"));
-      inner.forEach(d => d.open = false);
+<script>
+/** =========================
+ *  DONNÉES (à compléter)
+ *  =========================
+ *  Objectif : une structure “source de vérité” (JSON) + rendu dynamique.
+ *  Tu peux enrichir : ajouter chapitres/années/items sans toucher au layout.
+ */
+
+/* Phase 1 / Étapes & Progression (extraits) */
+const DATA = {
+  meta: {
+    title: "Plan d’étude cantonal — Mathématiques",
+    org: "Collège de Genève",
+    version: "web (travail en cours)"
+  },
+
+  nav: [
+    { id:"phase1", label:"Phase 1" },
+    { id:"etape1", label:"Étape 1" },
+    { id:"competences", label:"Compétences clés" },
+    { id:"progression", label:"Progression (1re → 4e)" },
+    { id:"decoupages", label:"Découpages annuels" },
+    { id:"acquisCO", label:"Acquis du CO" },
+    { id:"phase2", label:"Phase 2 : IA & numérique" },
+    { id:"phase3", label:"Phase 3 : transversalité" }
+  ],
+
+  phase1: {
+    intro: "Étape 1 : Présentation de la discipline + Compétences clés. Étape 2 : Découpages annuels / progression / enchaînements des contenus.",
+    cadre: [
+      "Deux niveaux dès la 2e année.",
+      "4h en DF pour MA1 et MA2 durant les 4 années.",
+      "Pas de révision prévue sur les acquis du CO (ils sont traités séparément ici).",
+      "Collaboration avec chimie / physique / informatique (ordre d’enseignement contraint)."
+    ]
+  },
+
+  competencesCles: [
+    { code:"C1", titre:"Raisonner de façon argumentée et rigoureuse" },
+    { code:"C2", titre:"Maîtriser les savoir-faire techniques en mathématiques" },
+    { code:"C3", titre:"Appréhender un problème avec les outils mathématiques" },
+    { code:"C4", titre:"Communiquer (écrit/oral) via langage symbolique & graphique" },
+    { code:"C5", titre:"Inscrire les maths dans l’histoire, liens & enjeux actuels" }
+  ],
+
+  progressionParAnnee: [
+    {
+      annee:"1re année",
+      points:[
+        "Calculer avec entiers, rationnels et réels.",
+        "Résoudre équations/inéquations (1er, 2e degré + factorisation).",
+        "Développer / réduire / factoriser.",
+        "Représenter fonctions élémentaires (dont 1er et 2e degrés).",
+        "Géométrie (angles, triangles, Pythagore, Thalès, cercles).",
+        "Trigonométrie triangle rectangle."
+      ]
+    },
+    {
+      annee:"2e année",
+      points:[
+        "Géométrie cartésienne (droites, cercles).",
+        "Trigonométrie triangle quelconque.",
+        "Statistiques (moyenne, médiane, variance, écart-type).",
+        "Équations et fonctions : polynomiales, rationnelles, exponentielles, logarithmiques, trigonométriques.",
+        "Calcul vectoriel de base."
+      ]
+    },
+    {
+      annee:"3e année",
+      points:[
+        "Suites (terme général, somme arithm./géom.).",
+        "Limites, dérivées, étude de fonctions, optimisation.",
+        "Combinatoire.",
+        "Probabilités discrètes (conditionnelle, binomiale).",
+        "Produit scalaire, droites/plans (plan & espace)."
+      ]
+    },
+    {
+      annee:"4e année",
+      points:[
+        "Primitives, intégrales, problèmes via calcul intégral.",
+        "Équations différentielles simples.",
+        "Produit vectoriel & distances (plan/espace).",
+        "Intervalles de confiance & tests statistiques.",
+        "Probabilités continues (loi normale)."
+      ]
     }
+  ],
 
-    function scrollToId(id) {
-      const el = document.getElementById(id);
-      if (!el) return;
-
-      // Si cible est une phase (<details>), on l'ouvre avant de scroller
-      if (el.tagName && el.tagName.toLowerCase() === "details") {
-        el.open = true;
+  /* Découpages annuels / “Vues disponibles”
+     Exemple complet sur un chapitre (à étendre chapitres 2, 3, etc.) */
+  decoupages: {
+    annee: "Première année (niveau normal) — exemple",
+    chapitres: [
+      {
+        id:"A1-CH1",
+        titre:"Chapitre 1 : Calcul numérique et algébrique",
+        items: [
+          { titre:"Définir les ensembles de nombres (N, Z, Q → approche R), puissances entières et racines carrées", tags:["C2","CdB"] },
+          { titre:"Connaître le vocabulaire et les notations du calcul numérique et de la théorie des ensembles (liste du minimum commun)", tags:["C3","CdB"] },
+          { titre:"Calculer avec les nombres entiers et relatifs (priorités, parenthèses, signes, fractions)", tags:["C1","L"] },
+          { titre:"Différencier nombres, constantes et variables", tags:["C2","CdB"] },
+          { titre:"Lire et utiliser les notations algébriques (liste des notations communes)", tags:["C3"] },
+          { titre:"Calculer avec les puissances entières et les racines carrées", tags:["C1","CdB"] },
+          { titre:"Analyser la structure de termes algébriques", tags:["C3"] },
+          { titre:"Effectuer des calculs algébriques : développer, réduire, factoriser", tags:["C2"] },
+          { titre:"Construction mathématique : déf./conjecture/contre-exemple/démonstration/théorème/réciproque/contraposée + produire des conjectures simples", tags:["C2"] },
+          { titre:"Démonstration : propriétés des puissances, racines, irrationalité de √2, identités remarquables", tags:["C2"] },
+          { titre:"Éléments d’histoire des nombres et de l’algèbre (liste du minimum commun)", tags:["C4","L"] }
+        ]
       }
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
+    ]
+  },
+
+  acquisCO: [
+    {
+      bloc:"FA — Calcul littéral",
+      items:[
+        "Connaître le vocabulaire lié au calcul littéral",
+        "Connaître et utiliser les conventions du calcul littéral",
+        "Calculer avec monômes et polynômes",
+        "Évaluer une expression littérale",
+        "Transformer des formules simples (isoler une variable)",
+        "Développer (identités remarquables, distributivité)",
+        "Factoriser (mise en évidence, identités remarquables)",
+        "Traduire programme de calcul ↔ expression littérale"
+      ]
+    },
+    {
+      bloc:"FA — Premier degré",
+      items:[
+        "Vocabulaire fonctions affines/linéaires/constantes",
+        "Représenter une affine (pente & ordonnée à l’origine)",
+        "Représenter une affine (2 points)",
+        "Retrouver l’expression d’une affine depuis le graphe (pente fractionnaire)",
+        "Parallélisme / perpendicularité",
+        "Résoudre équation du 1er degré (coefficients fractionnaires)",
+        "Traduire un problème en équation du 1er degré",
+        "Image, préimage, intersections avec Ox/Oy"
+      ]
+    },
+    {
+      bloc:"NO — Calcul numérique",
+      items:[
+        "Calculer efficacement (4 opérations, priorités) sur entiers relatifs, décimaux, rationnels",
+        "Comparer deux nombres",
+        "Notation scientifique : définition + calculs",
+        "Règles de calcul des puissances entières",
+        "Racines carrées et cubiques + propriétés"
+      ]
+    },
+    {
+      bloc:"GM — Géométrie (Pythagore & figures)",
+      items:[
+        "Théorème de Pythagore (direct, réciproque, contraposée)",
+        "Utiliser Pythagore pour longueur manquante / tester rectangle / dans l’espace",
+        "Périmètres (figures simples, polygones par décomposition)",
+        "Aires (figures simples, polygones par décomposition)",
+        "Cercle : périmètre & aire, longueur d’arc, secteur"
+      ]
     }
+  ],
 
-    // Ouvrir UNIQUEMENT un accordéon de Phase 1
-    function openOnlyPhase1Inner(innerId) {
-      const phase1 = document.getElementById("phase1");
-      if (!phase1) return;
+  phase2: {
+    note: "Section indiquée comme à développer : Enjeux IA, place à donner à l’IA, ressources numériques."
+  },
+  phase3: {
+    note: "Section indiquée comme à développer : ajout de transversalité."
+  }
+};
 
-      // On ouvre Phase 1 (si elle était repliée)
-      phase1.open = true;
+/** =========================
+ *  RENDU UI
+ *  ========================= */
+const elPills = document.getElementById("topPills");
+const elToc   = document.getElementById("toc");
+const elMain  = document.getElementById("content");
 
-      // On ferme les autres "niveau 1" dans Phase 1
-      closePhase1InnerDetails();
+let state = {
+  viewId: "phase1",
+  chapterFilter: new Set(["ALL"]),
+  query: ""
+};
 
-      // On ouvre le bon
-      const target = document.getElementById(innerId);
-      if (target && target.tagName.toLowerCase() === "details") {
-        target.open = true;
-      }
-    }
+function h(tag, attrs={}, children=[]){
+  const e = document.createElement(tag);
+  for (const [k,v] of Object.entries(attrs)){
+    if (k === "class") e.className = v;
+    else if (k === "html") e.innerHTML = v;
+    else if (k.startsWith("on") && typeof v === "function") e.addEventListener(k.slice(2), v);
+    else e.setAttribute(k, v);
+  }
+  for (const c of children){
+    if (c === null || c === undefined) continue;
+    e.appendChild(typeof c === "string" ? document.createTextNode(c) : c);
+  }
+  return e;
+}
 
-    // Actions des boutons du haut
-    const actions = {
-      phase1: () => {
-        // n'ouvre pas les sous-sections ; juste Phase 1 + scroll
-        scrollToId("phase1");
-      },
-      etape1: () => {
-        openOnlyPhase1Inner("etape1");
-        setTimeout(() => scrollToId("etape1"), 50);
-      },
-      competences: () => {
-        openOnlyPhase1Inner("competences");
-        setTimeout(() => scrollToId("competences"), 50);
-      },
-      etape2: () => {
-        openOnlyPhase1Inner("etape2");
-        setTimeout(() => scrollToId("etape2"), 50);
-      },
-      "liens-disciplines": () => {
-        openOnlyPhase1Inner("liens-disciplines");
-        setTimeout(() => scrollToId("liens-disciplines"), 50);
-      },
-      phase2: () => scrollToId("phase2"),
-      phase3: () => scrollToId("phase3")
-    };
+function scrollToId(id){
+  const target = document.getElementById(id);
+  if (!target) return;
+  target.scrollIntoView({behavior:"smooth", block:"start"});
+}
 
-    // Clic sur les boutons
-    document.addEventListener("click", (e) => {
-      const btn = e.target.closest("[data-action]");
-      if (!btn) return;
-      e.preventDefault();
-      const key = btn.getAttribute("data-action");
-      if (actions[key]) actions[key]();
-    });
-  </script>
+function renderPills(){
+  elPills.innerHTML = "";
+  DATA.nav.forEach(n=>{
+    const btn = h("button", {
+      class:"pill" + (state.viewId===n.id ? " active":""),
+      type:"button",
+      onclick: () => { state.viewId=n.id; renderAll(); scrollToId(n.id); }
+    }, [n.label]);
+    elPills.appendChild(btn);
+  });
+}
+
+function renderToc(){
+  elToc.innerHTML = "";
+  DATA.nav.forEach(n=>{
+    const li = h("li", {}, [
+      h("a", {href:"#"+n.id, onclick:(ev)=>{ev.preventDefault(); state.viewId=n.id; renderAll(); scrollToId(n.id);} }, [n.label])
+    ]);
+    elToc.appendChild(li);
+  });
+}
+
+function renderSectionPhase1(){
+  const sec = h("section", {class:"section", id:"phase1"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Phase 1"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("p", {class:"mini"}, [DATA.phase1.intro]),
+    h("div", {class:"note"}, [
+      h("div", {class:"muted"}, ["Cadre / intentions (extraits) :"]),
+      h("ul", {class:"bullets"}, DATA.phase1.cadre.map(t=>h("li",{},[t])))
+    ])
+  ]);
+  return sec;
+}
+
+function renderSectionEtape1(){
+  return h("section", {class:"section", id:"etape1"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Étape 1 — Présentation"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("details", {class:"accordion", open:true}, [
+      h("summary", {}, ["Présentation de la discipline (Mathématiques)", h("span",{class:"muted"},["▲"])]),
+      h("div", {class:"accBody"}, [
+        h("p", {}, [
+          "Ce bloc sert à poser l’intention (discipline, cohérence, preuve, modélisation, communication). ",
+          h("span", {class:"muted"}, ["(Tu peux coller ici des paragraphes complets si besoin.)"])
+        ])
+      ])
+    ])
+  ]);
+}
+
+function renderSectionCompetences(){
+  const sec = h("section", {class:"section", id:"competences"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Compétences clés"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("div", {class:"items"}, DATA.competencesCles.map(c =>
+      h("div", {class:"item"}, [
+        h("div", {class:"itemTop"}, [
+          h("p", {class:"itemTitle"}, [c.code + " — " + c.titre]),
+          h("div", {class:"badges"}, [h("span",{class:"badge"},[c.code])])
+        ])
+      ])
+    ))
+  ]);
+  return sec;
+}
+
+function renderSectionProgression(){
+  const sec = h("section", {class:"section", id:"progression"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Progression (1re → 4e)"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("p", {class:"mini"}, [
+      "Vue synthèse par année (à enrichir)."
+    ]),
+    ...DATA.progressionParAnnee.map(a =>
+      h("details", {class:"accordion", open:false}, [
+        h("summary", {}, [a.annee, h("span",{class:"muted"},["▼"])]),
+        h("div", {class:"accBody"}, [
+          h("ul", {class:"bullets"}, a.points.map(x=>h("li",{},[x])))
+        ])
+      ])
+    )
+  ]);
+  return sec;
+}
+
+function normalizeTags(tags){ return tags.map(t=>t.trim()); }
+
+function itemMatchesFilters(item){
+  const q = state.query.trim().toLowerCase();
+  if (q && !item.titre.toLowerCase().includes(q)) return false;
+
+  const active = [...state.chapterFilter];
+  if (active.includes("ALL")) return true;
+
+  const tags = normalizeTags(item.tags || []);
+  // Si on choisit plusieurs chips, on accepte si l’item match au moins une des chips (OR).
+  return active.some(f => tags.includes(f));
+}
+
+function renderSectionDecoupages(){
+  const chapter = DATA.decoupages.chapitres[0];
+  const allFilters = ["ALL","C1","C2","C3","C4","C5","CdB","L","T","N"];
+  const sec = h("section", {class:"section", id:"decoupages"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Découpages annuels / Vues dynamiques"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("p", {class:"mini"}, [
+      DATA.decoupages.annee, " — ", h("span",{class:"k"},["exemple"]), " : filtrage par compétence / tags."
+    ]),
+    h("details", {class:"accordion", open:true}, [
+      h("summary", {}, [chapter.titre, h("span",{class:"muted"},["▲"])]),
+      h("div", {class:"accBody"}, [
+        h("div", {class:"searchRow"}, [
+          h("input", {
+            type:"search",
+            placeholder:"Rechercher dans le chapitre… (ex: “racines”, “démonstration”)",
+            value: state.query,
+            oninput:(ev)=>{ state.query = ev.target.value; renderAll(false); }
+          }),
+          h("span", {class:"muted"}, ["Astuce : clique sur C1/C2/… pour reproduire les “Vues disponibles”."])
+        ]),
+        h("div", {class:"chips"}, allFilters.map(f => {
+          const active = state.chapterFilter.has(f);
+          return h("button", {
+            class:"chip" + (active ? " active":""),
+            type:"button",
+            onclick:()=>{
+              if (f === "ALL"){
+                state.chapterFilter = new Set(["ALL"]);
+              } else {
+                if (state.chapterFilter.has("ALL")) state.chapterFilter.delete("ALL");
+                if (state.chapterFilter.has(f)) state.chapterFilter.delete(f);
+                else state.chapterFilter.add(f);
+                if (state.chapterFilter.size === 0) state.chapterFilter.add("ALL");
+              }
+              renderAll(false);
+            }
+          }, [f]);
+        })),
+        h("div", {class:"items", id:"chapterItems"})
+      ])
+    ])
+  ]);
+
+  return sec;
+}
+
+function renderChapterItems(){
+  const holder = document.getElementById("chapterItems");
+  if (!holder) return;
+  holder.innerHTML = "";
+
+  const chapter = DATA.decoupages.chapitres[0];
+  const filtered = chapter.items.filter(itemMatchesFilters);
+
+  holder.appendChild(
+    h("p", {class:"mini"}, [
+      "Résultats : ",
+      h("strong", {}, [String(filtered.length)]),
+      " / ",
+      String(chapter.items.length),
+      " — filtres actifs : ",
+      h("span",{class:"k"}, [[...state.chapterFilter].join(", ")]),
+      state.query.trim() ? (" — recherche : “" + state.query.trim() + "”") : ""
+    ])
+  );
+
+  filtered.forEach(it=>{
+    holder.appendChild(
+      h("div", {class:"item"}, [
+        h("div", {class:"itemTop"}, [
+          h("p", {class:"itemTitle"}, [it.titre]),
+          h("div", {class:"badges"}, (it.tags||[]).map(t=>h("span",{class:"badge"},[t])))
+        ])
+      ])
+    );
+  });
+
+  if (filtered.length === 0){
+    holder.appendChild(h("div",{class:"note"},[
+      "Aucun item ne correspond à ces filtres/recherche. ",
+      h("span",{class:"muted"},["(Essaie ALL ou enlève un filtre.)"])
+    ]));
+  }
+}
+
+function renderSectionAcquisCO(){
+  return h("section", {class:"section", id:"acquisCO"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Acquis du CO (référence)"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("p", {class:"mini"}, [
+      "Cette vue regroupe les acquis du cycle d’orientation (utile comme “référentiel d’entrée”, séparé du PEc)."
+    ]),
+    ...DATA.acquisCO.map(b =>
+      h("details", {class:"accordion", open:false}, [
+        h("summary", {}, [b.bloc, h("span",{class:"muted"},["▼"])]),
+        h("div", {class:"accBody"}, [
+          h("ul", {class:"bullets"}, b.items.map(x=>h("li",{},[x])))
+        ])
+      ])
+    )
+  ]);
+}
+
+function renderSectionPhase2(){
+  return h("section", {class:"section", id:"phase2"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Phase 2 : IA et numérique"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("div", {class:"note"}, [DATA.phase2.note])
+  ]);
+}
+
+function renderSectionPhase3(){
+  return h("section", {class:"section", id:"phase3"}, [
+    h("div", {class:"sectionHead"}, [
+      h("h2", {class:"sectionTitle"}, ["▼  Phase 3 : transversalité"]),
+      h("div", {class:"muted"}, [""])
+    ]),
+    h("div", {class:"note"}, [DATA.phase3.note])
+  ]);
+}
+
+function renderAll(resetScroll=true){
+  renderPills();
+  renderToc();
+
+  elMain.innerHTML = "";
+  elMain.appendChild(renderSectionPhase1());
+  elMain.appendChild(renderSectionEtape1());
+  elMain.appendChild(renderSectionCompetences());
+  elMain.appendChild(renderSectionProgression());
+  elMain.appendChild(renderSectionDecoupages());
+  elMain.appendChild(renderSectionAcquisCO());
+  elMain.appendChild(renderSectionPhase2());
+  elMain.appendChild(renderSectionPhase3());
+
+  renderChapterItems();
+
+  if (resetScroll) scrollToId(state.viewId);
+}
+
+renderAll();
+</script>
 </body>
 </html>
