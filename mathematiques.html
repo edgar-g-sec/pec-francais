@@ -90,6 +90,37 @@
     .toc{margin:0;padding-left:16px;font-size:14px}
     .toc li{margin:6px 0}
 
+    /* Sidebar pliable */
+    .sideTop{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .sideBtns{display:flex; gap:8px}
+    .sideBtn{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:10px;
+      padding:7px 10px;
+      font-size:12px;
+      cursor:pointer;
+      color:#374151;
+    }
+    .sideBtn:hover{background:#f3f6ff; border-color:#cfe0ff}
+    #tocWrap.isHidden{display:none}
+
+    /* Pliage horizontal */
+    .grid.sidebarMini{
+      grid-template-columns: 72px 1fr;
+    }
+    .grid.sidebarMini .side{padding:10px}
+    .grid.sidebarMini .side h3,
+    .grid.sidebarMini #tocWrap{display:none}
+    .grid.sidebarMini .resourcesPanel{display:none !important}
+    .grid.sidebarMini .sideTop{justify-content:center}
+    .grid.sidebarMini .sideBtns{flex-direction:column}
+
     /* Main */
     .main{
       background:var(--card);
@@ -123,6 +154,7 @@
       letter-spacing:-0.02em;
     }
     .mini{margin:8px 0 0;color:var(--muted);font-size:13px}
+    .muted{color:var(--muted)}
 
     /* Accordions (autres blocs) */
     details.accordion{
@@ -215,7 +247,7 @@
       box-shadow:0 0 0 4px rgba(37,99,235,.08);
     }
 
-    /* --------- NOUVEAU : Compétences (style capture) --------- */
+    /* --------- Compétences (style capture) --------- */
     .competences{margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
 
     details.comp{
@@ -248,9 +280,7 @@
       font-size:14px;
     }
     details.comp[open] .chev{ transform: translateY(2px) rotate(90deg); }
-
     .compTitle{margin:0;font-size:15px;line-height:1.25}
-
     .compBody{padding:0 12px 12px}
     .subpoints{margin:8px 0 0;padding-left:20px;color:#111827;font-size:14px}
     .subpoints li{margin:8px 0}
@@ -280,6 +310,55 @@
         background: color-mix(in srgb, var(--accentSoft) 60%, #ffffff);
       }
     }
+
+    /* --------- Ressources panel --------- */
+    .resourcesPanel{
+      margin-top:12px;
+      border-top:1px solid var(--border);
+      padding-top:12px;
+    }
+    .resHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+      margin-bottom:10px;
+    }
+    .resTitle{font-weight:800;font-size:14px}
+    .resSub{color:var(--muted);font-size:12px;margin-top:2px}
+    .resList{display:flex;flex-direction:column;gap:8px}
+
+    .resItem{
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px;
+      background:#fff;
+    }
+    .resIcon{
+      width:34px;height:34px;
+      border-radius:10px;
+      border:1px solid var(--border);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      background:#fbfcff;
+      font-size:16px;
+      flex:0 0 auto;
+    }
+    .resBody{min-width:0}
+    .resName{font-weight:700;margin:0;font-size:13px}
+    .resMeta{margin:2px 0 0;color:var(--muted);font-size:12px}
+    .resLink{
+      display:inline-block;
+      margin-top:6px;
+      font-size:12px;
+      color:#1d4ed8;
+      text-decoration:none;
+    }
+    .resLink:hover{text-decoration:underline}
   </style>
 </head>
 
@@ -291,12 +370,37 @@
       <div class="pills" id="topPills"></div>
     </header>
 
-    <div class="grid">
-      <aside class="side">
-        <h3>Sommaire</h3>
-        <ul class="toc" id="toc"></ul>
+    <div class="grid" id="grid">
+      <!-- Sidebar (sommaire + ressources) -->
+      <aside class="side" id="sidebar">
+        <div class="sideTop">
+          <h3>Sommaire</h3>
+
+          <div class="sideBtns">
+            <button class="sideBtn" id="btnCollapseV" type="button">Replier</button>
+            <button class="sideBtn" id="btnCollapseH" type="button">⇔</button>
+          </div>
+        </div>
+
+        <div id="tocWrap">
+          <ul class="toc" id="toc"></ul>
+        </div>
+
+        <!-- Ressources (caché tant qu’aucune compétence n’est sélectionnée) -->
+        <div class="resourcesPanel" id="resourcesPanel" hidden>
+          <div class="resHead">
+            <div>
+              <div class="resTitle">Ressources</div>
+              <div class="resSub" id="resFor">Pour : —</div>
+            </div>
+            <button class="sideBtn" id="btnCloseRes" type="button">Fermer</button>
+          </div>
+
+          <div class="resList" id="resList"></div>
+        </div>
       </aside>
 
+      <!-- Main -->
       <main class="main" id="content"></main>
     </div>
   </div>
@@ -409,6 +513,35 @@ const DATA = {
   phase3: { note:"Section indiquée comme à développer : ajout de transversalité." }
 };
 
+/* Ressources (exemples) */
+DATA.ressourcesParCompetence = {
+  C1: [
+    { type:"pdf",   name:"Fiche — Bases de la démarche déductive", meta:"PDF • 6 pages", href:"#"},
+    { type:"video", name:"Vidéo — Preuve & contre-exemple (intro)", meta:"Vidéo • 8 min", href:"#"},
+    { type:"web",   name:"Article — Réciproque vs contraposée", meta:"Lien web", href:"#"},
+  ],
+  C2: [
+    { type:"pdf",   name:"Mémo — Techniques algébriques essentielles", meta:"PDF • 4 pages", href:"#"},
+    { type:"web",   name:"Outil — Calculatrice CAS (simulateur)", meta:"Lien web", href:"#"},
+    { type:"video", name:"Vidéo — Vérifier la cohérence d’un résultat", meta:"Vidéo • 5 min", href:"#"},
+  ],
+  C3: [
+    { type:"pdf",   name:"Guide — Modéliser (schéma / algèbre / graphe)", meta:"PDF • 5 pages", href:"#"},
+    { type:"activity", name:"Activité — Méthodes standards de résolution", meta:"Exercices • 20 min", href:"#"},
+    { type:"web",   name:"Banque — Problèmes contextualisés", meta:"Lien web", href:"#"},
+  ],
+  C4: [
+    { type:"pdf",   name:"Conventions — Notations (CRM)", meta:"PDF • 3 pages", href:"#"},
+    { type:"video", name:"Vidéo — Expliquer un raisonnement à l’oral", meta:"Vidéo • 7 min", href:"#"},
+    { type:"web",   name:"Ressource — Choisir le bon registre", meta:"Lien web", href:"#"},
+  ],
+  C5: [
+    { type:"web",   name:"Dossier — Maths & autres disciplines", meta:"Lien web", href:"#"},
+    { type:"pdf",   name:"Chronologie — Grandes étapes historiques", meta:"PDF • 2 pages", href:"#"},
+    { type:"video", name:"Vidéo — Enjeux sociaux des applications", meta:"Vidéo • 10 min", href:"#"},
+  ]
+};
+
 /* --- Helpers --- */
 const elPills = document.getElementById("topPills");
 const elToc   = document.getElementById("toc");
@@ -460,16 +593,70 @@ function renderToc(){
   });
 }
 
+/* --- Ressources panel --- */
+function iconFor(type){
+  if(type==="pdf") return "📄";
+  if(type==="video") return "▶️";
+  if(type==="web") return "🔗";
+  if(type==="activity") return "🧩";
+  return "📌";
+}
+function showResourcesFor(compCode){
+  const panel = document.getElementById("resourcesPanel");
+  const list  = document.getElementById("resList");
+  const resFor= document.getElementById("resFor");
+
+  const res = (DATA.ressourcesParCompetence && DATA.ressourcesParCompetence[compCode]) || [];
+  if(res.length === 0){
+    panel.hidden = true;
+    return;
+  }
+
+  resFor.textContent = `Pour : ${compCode}`;
+  list.innerHTML = "";
+
+  res.forEach(r=>{
+    const item = h("div", {class:"resItem"}, [
+      h("div", {class:"resIcon", title:r.type}, [iconFor(r.type)]),
+      h("div", {class:"resBody"}, [
+        h("p", {class:"resName"}, [r.name]),
+        h("p", {class:"resMeta"}, [r.meta || ""]),
+        h("a", {class:"resLink", href:r.href || "#", target:"_blank", rel:"noopener"}, ["Ouvrir"])
+      ])
+    ]);
+    list.appendChild(item);
+  });
+
+  panel.hidden = false;
+}
+function hideResources(){
+  const panel = document.getElementById("resourcesPanel");
+  panel.hidden = true;
+}
+document.getElementById("btnCloseRes").addEventListener("click", hideResources);
+
+/* Sommaire pliable verticalement */
+document.getElementById("btnCollapseV").addEventListener("click", ()=>{
+  const tocWrap = document.getElementById("tocWrap");
+  const isHidden = tocWrap.classList.toggle("isHidden");
+  document.getElementById("btnCollapseV").textContent = isHidden ? "Déplier" : "Replier";
+});
+
+/* Sommaire pliable horizontalement */
+document.getElementById("btnCollapseH").addEventListener("click", ()=>{
+  document.getElementById("grid").classList.toggle("sidebarMini");
+});
+
 /* --- Sections --- */
 function renderSectionCompetences(){
   return h("section", {class:"section", id:"competences"}, [
     h("div", {class:"sectionHead"}, [
       h("h2", {class:"sectionTitle"}, ["▼ Compétences clés en mathématiques"]),
-      h("p", {class:"mini"}, ["Clique sur une compétence pour afficher la déclinaison (a, b, c…)."])
+      h("p", {class:"mini"}, ["Clique sur une compétence pour afficher la déclinaison (a, b, c…) et les ressources à gauche."])
     ]),
 
     h("div", {class:"competences"}, [
-      h("details", {class:"comp c1", open:true}, [
+      h("details", {class:"comp c1", open:true, "data-comp":"C1"}, [
         h("summary", {}, [
           h("div", {class:"compLeft"}, [
             h("span", {class:"chev"}, ["▶"]),
@@ -488,7 +675,7 @@ function renderSectionCompetences(){
 
       h("div", {class:"trait"}, []),
 
-      h("details", {class:"comp c2"}, [
+      h("details", {class:"comp c2", "data-comp":"C2"}, [
         h("summary", {}, [
           h("div", {class:"compLeft"}, [
             h("span", {class:"chev"}, ["▶"]),
@@ -507,7 +694,7 @@ function renderSectionCompetences(){
 
       h("div", {class:"trait"}, []),
 
-      h("details", {class:"comp c3"}, [
+      h("details", {class:"comp c3", "data-comp":"C3"}, [
         h("summary", {}, [
           h("div", {class:"compLeft"}, [
             h("span", {class:"chev"}, ["▶"]),
@@ -526,7 +713,7 @@ function renderSectionCompetences(){
 
       h("div", {class:"trait"}, []),
 
-      h("details", {class:"comp c4"}, [
+      h("details", {class:"comp c4", "data-comp":"C4"}, [
         h("summary", {}, [
           h("div", {class:"compLeft"}, [
             h("span", {class:"chev"}, ["▶"]),
@@ -545,7 +732,7 @@ function renderSectionCompetences(){
 
       h("div", {class:"trait"}, []),
 
-      h("details", {class:"comp c5"}, [
+      h("details", {class:"comp c5", "data-comp":"C5"}, [
         h("summary", {}, [
           h("div", {class:"compLeft"}, [
             h("span", {class:"chev"}, ["▶"]),
@@ -734,25 +921,37 @@ function renderAll(doScroll){
   elMain.appendChild(renderSectionPhase3());
 
   renderChapterItems();
+  wireCompetences();
 
   if (doScroll) scrollToId(state.viewId);
 }
 
-/* Interactions : 1 compétence ouverte à la fois */
+/* Interactions : 1 compétence ouverte à la fois + ressources à gauche */
 function wireCompetences(){
   document.querySelectorAll('details.comp').forEach(d => {
+    // Evite de doubler les listeners si renderAll est appelé plusieurs fois
+    if (d.__wired) return;
+    d.__wired = true;
+
     d.addEventListener('toggle', () => {
-      if (!d.open) return;
-      document.querySelectorAll('details.comp').forEach(other => {
-        if (other !== d) other.open = false;
-      });
+      const code = d.getAttribute("data-comp");
+
+      if (d.open){
+        document.querySelectorAll('details.comp').forEach(other => {
+          if (other !== d) other.open = false;
+        });
+        if(code) showResourcesFor(code);
+      } else {
+        hideResources();
+      }
     });
   });
 }
 
 /* Init */
 renderAll(false);
-wireCompetences();
+/* Affiche les ressources de C1 (ouverte par défaut) */
+showResourcesFor("C1");
 </script>
 </body>
 </html>
