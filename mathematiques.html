@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Plan d’étude cantonal — Mathématiques (version “web”)</title>
+  <title>Plan d’étude cantonal — Mathématiques (maquette)</title>
+
   <style>
     :root{
       --bg:#f6f7fb;
@@ -11,13 +12,11 @@
       --border:#e6e8f0;
       --text:#111827;
       --muted:#6b7280;
-      --blue:#2563eb;
-      --blue-weak:#e8efff;
       --shadow:0 10px 30px rgba(17,24,39,.06);
       --radius:16px;
       --radius2:12px;
+      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
       --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
-      --sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
     }
     *{box-sizing:border-box}
     body{
@@ -27,40 +26,24 @@
       background:var(--bg);
       line-height:1.45;
     }
-    a{color:var(--blue); text-decoration:none}
+    a{color:#1d4ed8; text-decoration:none}
     a:hover{text-decoration:underline}
-    .wrap{
-      max-width:1200px;
-      margin:24px auto;
-      padding:0 16px 32px;
-    }
+
+    .wrap{max-width:1200px;margin:24px auto;padding:0 16px 40px}
 
     /* Header */
     .header{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:var(--radius);
-      padding:20px 20px 14px;
+      padding:18px 18px 14px;
       box-shadow:var(--shadow);
     }
-    .title{
-      margin:0 0 4px;
-      font-size:26px;
-      letter-spacing:-0.02em;
-    }
-    .subtitle{
-      margin:0 0 12px;
-      color:var(--muted);
-      font-size:14px;
-    }
+    .title{margin:0 0 4px;font-size:26px;letter-spacing:-0.02em}
+    .subtitle{margin:0;color:var(--muted);font-size:14px}
 
     /* Pills (comme capture) */
-    .pills{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      padding:6px 0 0;
-    }
+    .pills{display:flex;flex-wrap:wrap;gap:8px;padding:10px 0 0}
     .pill{
       border:1px solid var(--border);
       background:#fff;
@@ -75,7 +58,7 @@
     .pill:hover{transform:translateY(-1px)}
     .pill.active{
       border-color:#cfe0ff;
-      background:var(--blue-weak);
+      background:#e8efff;
       color:#1d4ed8;
       font-weight:600;
     }
@@ -91,43 +74,35 @@
     @media (max-width: 980px){
       .grid{grid-template-columns:1fr}
     }
-    .card{
+
+    /* Sidebar */
+    .side{
       background:var(--card);
       border:1px solid var(--border);
       border-radius:var(--radius);
       box-shadow:var(--shadow);
-    }
-
-    /* Sidebar */
-    .side{
       padding:14px;
       position:sticky;
       top:16px;
     }
-    @media (max-width: 980px){
-      .side{position:relative; top:auto}
-    }
-    .side h3{
-      margin:6px 0 10px;
-      font-size:14px;
-      letter-spacing:.02em;
-      text-transform:none;
-    }
-    .toc{
-      margin:0;
-      padding-left:16px;
-      color:#1f2937;
-      font-size:14px;
-    }
+    @media (max-width: 980px){ .side{position:relative; top:auto} }
+    .side h3{margin:6px 0 10px;font-size:14px}
+    .toc{margin:0;padding-left:16px;font-size:14px}
     .toc li{margin:6px 0}
-    .toc a{color:#1d4ed8}
-    .toc small{color:var(--muted)}
 
     /* Main */
-    .main{padding:14px}
+    .main{
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:14px;
+    }
+
+    /* Section */
     .section{
       border:1px solid var(--border);
-      border-radius:var(--radius2);
+      border-radius:var(--radius);
       background:#fff;
       padding:14px;
       margin-bottom:12px;
@@ -142,18 +117,14 @@
       display:flex;
       align-items:center;
       gap:10px;
-      font-weight:800;
       margin:0;
+      font-weight:800;
       font-size:20px;
       letter-spacing:-0.02em;
     }
-    .mini{
-      margin:8px 0 0;
-      color:var(--muted);
-      font-size:13px;
-    }
+    .mini{margin:8px 0 0;color:var(--muted);font-size:13px}
 
-    /* Accordions */
+    /* Accordions (autres blocs) */
     details.accordion{
       border:1px solid var(--border);
       border-radius:12px;
@@ -178,13 +149,8 @@
     .bullets{margin:8px 0 0; padding-left:18px}
     .bullets li{margin:6px 0}
 
-    /* Chips for filters */
-    .chips{
-      display:flex;
-      flex-wrap:wrap;
-      gap:8px;
-      margin-top:10px;
-    }
+    /* Chips / filters */
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
     .chip{
       border:1px solid var(--border);
       background:#fff;
@@ -195,18 +161,14 @@
       user-select:none;
     }
     .chip.active{
-      background:var(--blue-weak);
+      background:#e8efff;
       border-color:#cfe0ff;
       color:#1d4ed8;
       font-weight:700;
     }
 
-    /* Lists / items */
-    .items{
-      margin-top:10px;
-      border-top:1px solid var(--border);
-      padding-top:10px;
-    }
+    /* Items */
+    .items{margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
     .item{
       padding:10px 10px;
       border:1px solid var(--border);
@@ -214,23 +176,9 @@
       margin:8px 0;
       background:#fff;
     }
-    .itemTop{
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .itemTitle{
-      margin:0;
-      font-weight:700;
-    }
-    .badges{
-      display:flex;
-      flex-wrap:wrap;
-      gap:6px;
-      justify-content:flex-end;
-      min-width:160px;
-    }
+    .itemTop{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+    .itemTitle{margin:0;font-weight:700}
+    .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;min-width:160px}
     .badge{
       font-family:var(--mono);
       font-size:12px;
@@ -241,7 +189,6 @@
       color:#111827;
       white-space:nowrap;
     }
-
     .note{
       border-left:3px solid #c7d2fe;
       padding:8px 10px;
@@ -258,29 +205,81 @@
       border-radius:8px;
       border:1px solid #e5e7eb;
     }
-
-    .searchRow{
-      display:flex;
-      gap:10px;
-      margin-top:10px;
-      flex-wrap:wrap;
-      align-items:center;
-    }
+    .searchRow{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;align-items:center}
     input[type="search"]{
-      flex:1;
-      min-width:240px;
-      border:1px solid var(--border);
-      border-radius:12px;
-      padding:10px 12px;
-      font-size:14px;
-      outline:none;
-      background:#fff;
+      flex:1;min-width:240px;border:1px solid var(--border);
+      border-radius:12px;padding:10px 12px;font-size:14px;outline:none;background:#fff;
     }
     input[type="search"]:focus{
       border-color:#cfe0ff;
       box-shadow:0 0 0 4px rgba(37,99,235,.08);
     }
-    .muted{color:var(--muted)}
+
+    /* --------- NOUVEAU : Compétences (style capture) --------- */
+    .competences{margin-top:10px;border-top:1px solid var(--border);padding-top:10px}
+
+    details.comp{
+      border:1px solid var(--border);
+      border-radius:14px;
+      background:#fff;
+      overflow:hidden;
+      margin:10px 0;
+    }
+    details.comp > summary{
+      list-style:none;
+      cursor:pointer;
+      user-select:none;
+      padding:12px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      font-weight:800;
+      letter-spacing:-0.01em;
+    }
+    details.comp > summary::-webkit-details-marker{display:none}
+
+    .compLeft{display:flex;align-items:flex-start;gap:10px;min-width:0}
+    .chev{
+      width:18px;height:18px;
+      display:inline-flex;align-items:center;justify-content:center;
+      color:var(--muted);
+      transform: translateY(2px);
+      font-size:14px;
+    }
+    details.comp[open] .chev{ transform: translateY(2px) rotate(90deg); }
+
+    .compTitle{margin:0;font-size:15px;line-height:1.25}
+
+    .compBody{padding:0 12px 12px}
+    .subpoints{margin:8px 0 0;padding-left:20px;color:#111827;font-size:14px}
+    .subpoints li{margin:8px 0}
+
+    .trait{
+      height:1px;
+      background:linear-gradient(to right, transparent, #e6e8f0, transparent);
+      margin:10px 0;
+    }
+
+    .c1{ --accent:#2563eb; --accentSoft:#e8efff; }
+    .c2{ --accent:#16a34a; --accentSoft:#e8fff1; }
+    .c3{ --accent:#f59e0b; --accentSoft:#fff6e6; }
+    .c4{ --accent:#7c3aed; --accentSoft:#f3e8ff; }
+    .c5{ --accent:#ef4444; --accentSoft:#ffecec; }
+
+    details.comp.c1 > summary, details.comp.c2 > summary, details.comp.c3 > summary, details.comp.c4 > summary, details.comp.c5 > summary{
+      background: linear-gradient(90deg, var(--accentSoft), #ffffff 65%);
+    }
+    details.comp.c1 .badge, details.comp.c2 .badge, details.comp.c3 .badge, details.comp.c4 .badge, details.comp.c5 .badge{
+      border-color:#dbe2ff;
+      background:#fff;
+    }
+    @supports (background: color-mix(in srgb, red 50%, white)){
+      details.comp.c1 .badge, details.comp.c2 .badge, details.comp.c3 .badge, details.comp.c4 .badge, details.comp.c5 .badge{
+        border-color: color-mix(in srgb, var(--accent) 25%, #e6e8f0);
+        background: color-mix(in srgb, var(--accentSoft) 60%, #ffffff);
+      }
+    }
   </style>
 </head>
 
@@ -289,43 +288,23 @@
     <header class="header" id="top">
       <h1 class="title">Plan d’étude cantonal — Mathématiques</h1>
       <p class="subtitle">Collège de Genève — version “web” (travail en cours)</p>
-
-      <!-- Boutons en clair (comme capture) -->
       <div class="pills" id="topPills"></div>
     </header>
 
     <div class="grid">
-      <!-- Sommaire -->
-      <aside class="card side">
+      <aside class="side">
         <h3>Sommaire</h3>
         <ul class="toc" id="toc"></ul>
-        <p class="mini"><small>Astuce : les boutons en haut changent de vue, le sommaire t’amène directement à la section.</small></p>
       </aside>
 
-      <!-- Contenu -->
-      <main class="card main" id="content"></main>
+      <main class="main" id="content"></main>
     </div>
   </div>
 
 <script>
-/** =========================
- *  DONNÉES (à compléter)
- *  =========================
- *  Objectif : une structure “source de vérité” (JSON) + rendu dynamique.
- *  Tu peux enrichir : ajouter chapitres/années/items sans toucher au layout.
- */
-
-/* Phase 1 / Étapes & Progression (extraits) */
+/* --- Données (maquette) --- */
 const DATA = {
-  meta: {
-    title: "Plan d’étude cantonal — Mathématiques",
-    org: "Collège de Genève",
-    version: "web (travail en cours)"
-  },
-
   nav: [
-    { id:"phase1", label:"Phase 1" },
-    { id:"etape1", label:"Étape 1" },
     { id:"competences", label:"Compétences clés" },
     { id:"progression", label:"Progression (1re → 4e)" },
     { id:"decoupages", label:"Découpages annuels" },
@@ -334,70 +313,38 @@ const DATA = {
     { id:"phase3", label:"Phase 3 : transversalité" }
   ],
 
-  phase1: {
-    intro: "Étape 1 : Présentation de la discipline + Compétences clés. Étape 2 : Découpages annuels / progression / enchaînements des contenus.",
-    cadre: [
-      "Deux niveaux dès la 2e année.",
-      "4h en DF pour MA1 et MA2 durant les 4 années.",
-      "Pas de révision prévue sur les acquis du CO (ils sont traités séparément ici).",
-      "Collaboration avec chimie / physique / informatique (ordre d’enseignement contraint)."
-    ]
-  },
-
-  competencesCles: [
-    { code:"C1", titre:"Raisonner de façon argumentée et rigoureuse" },
-    { code:"C2", titre:"Maîtriser les savoir-faire techniques en mathématiques" },
-    { code:"C3", titre:"Appréhender un problème avec les outils mathématiques" },
-    { code:"C4", titre:"Communiquer (écrit/oral) via langage symbolique & graphique" },
-    { code:"C5", titre:"Inscrire les maths dans l’histoire, liens & enjeux actuels" }
-  ],
-
   progressionParAnnee: [
-    {
-      annee:"1re année",
-      points:[
-        "Calculer avec entiers, rationnels et réels.",
-        "Résoudre équations/inéquations (1er, 2e degré + factorisation).",
-        "Développer / réduire / factoriser.",
-        "Représenter fonctions élémentaires (dont 1er et 2e degrés).",
-        "Géométrie (angles, triangles, Pythagore, Thalès, cercles).",
-        "Trigonométrie triangle rectangle."
-      ]
-    },
-    {
-      annee:"2e année",
-      points:[
-        "Géométrie cartésienne (droites, cercles).",
-        "Trigonométrie triangle quelconque.",
-        "Statistiques (moyenne, médiane, variance, écart-type).",
-        "Équations et fonctions : polynomiales, rationnelles, exponentielles, logarithmiques, trigonométriques.",
-        "Calcul vectoriel de base."
-      ]
-    },
-    {
-      annee:"3e année",
-      points:[
-        "Suites (terme général, somme arithm./géom.).",
-        "Limites, dérivées, étude de fonctions, optimisation.",
-        "Combinatoire.",
-        "Probabilités discrètes (conditionnelle, binomiale).",
-        "Produit scalaire, droites/plans (plan & espace)."
-      ]
-    },
-    {
-      annee:"4e année",
-      points:[
-        "Primitives, intégrales, problèmes via calcul intégral.",
-        "Équations différentielles simples.",
-        "Produit vectoriel & distances (plan/espace).",
-        "Intervalles de confiance & tests statistiques.",
-        "Probabilités continues (loi normale)."
-      ]
-    }
+    { annee:"1re année", points:[
+      "Calculer avec entiers, rationnels et réels.",
+      "Résoudre équations/inéquations (1er, 2e degré + factorisation).",
+      "Développer / réduire / factoriser.",
+      "Représenter fonctions élémentaires (dont 1er et 2e degrés).",
+      "Géométrie (angles, triangles, Pythagore, Thalès, cercles).",
+      "Trigonométrie triangle rectangle."
+    ]},
+    { annee:"2e année", points:[
+      "Géométrie cartésienne (droites, cercles).",
+      "Trigonométrie triangle quelconque.",
+      "Statistiques (moyenne, médiane, variance, écart-type).",
+      "Équations et fonctions : polynomiales, rationnelles, exponentielles, logarithmiques, trigonométriques.",
+      "Calcul vectoriel de base."
+    ]},
+    { annee:"3e année", points:[
+      "Suites (terme général, somme arithm./géom.).",
+      "Limites, dérivées, étude de fonctions, optimisation.",
+      "Combinatoire.",
+      "Probabilités discrètes (conditionnelle, binomiale).",
+      "Produit scalaire, droites/plans (plan & espace)."
+    ]},
+    { annee:"4e année", points:[
+      "Primitives, intégrales, problèmes via calcul intégral.",
+      "Équations différentielles simples.",
+      "Produit vectoriel & distances (plan/espace).",
+      "Intervalles de confiance & tests statistiques.",
+      "Probabilités continues (loi normale)."
+    ]}
   ],
 
-  /* Découpages annuels / “Vues disponibles”
-     Exemple complet sur un chapitre (à étendre chapitres 2, 3, etc.) */
   decoupages: {
     annee: "Première année (niveau normal) — exemple",
     chapitres: [
@@ -422,74 +369,52 @@ const DATA = {
   },
 
   acquisCO: [
-    {
-      bloc:"FA — Calcul littéral",
-      items:[
-        "Connaître le vocabulaire lié au calcul littéral",
-        "Connaître et utiliser les conventions du calcul littéral",
-        "Calculer avec monômes et polynômes",
-        "Évaluer une expression littérale",
-        "Transformer des formules simples (isoler une variable)",
-        "Développer (identités remarquables, distributivité)",
-        "Factoriser (mise en évidence, identités remarquables)",
-        "Traduire programme de calcul ↔ expression littérale"
-      ]
-    },
-    {
-      bloc:"FA — Premier degré",
-      items:[
-        "Vocabulaire fonctions affines/linéaires/constantes",
-        "Représenter une affine (pente & ordonnée à l’origine)",
-        "Représenter une affine (2 points)",
-        "Retrouver l’expression d’une affine depuis le graphe (pente fractionnaire)",
-        "Parallélisme / perpendicularité",
-        "Résoudre équation du 1er degré (coefficients fractionnaires)",
-        "Traduire un problème en équation du 1er degré",
-        "Image, préimage, intersections avec Ox/Oy"
-      ]
-    },
-    {
-      bloc:"NO — Calcul numérique",
-      items:[
-        "Calculer efficacement (4 opérations, priorités) sur entiers relatifs, décimaux, rationnels",
-        "Comparer deux nombres",
-        "Notation scientifique : définition + calculs",
-        "Règles de calcul des puissances entières",
-        "Racines carrées et cubiques + propriétés"
-      ]
-    },
-    {
-      bloc:"GM — Géométrie (Pythagore & figures)",
-      items:[
-        "Théorème de Pythagore (direct, réciproque, contraposée)",
-        "Utiliser Pythagore pour longueur manquante / tester rectangle / dans l’espace",
-        "Périmètres (figures simples, polygones par décomposition)",
-        "Aires (figures simples, polygones par décomposition)",
-        "Cercle : périmètre & aire, longueur d’arc, secteur"
-      ]
-    }
+    { bloc:"FA — Calcul littéral", items:[
+      "Connaître le vocabulaire lié au calcul littéral",
+      "Connaître et utiliser les conventions du calcul littéral",
+      "Calculer avec monômes et polynômes",
+      "Évaluer une expression littérale",
+      "Transformer des formules simples (isoler une variable)",
+      "Développer (identités remarquables, distributivité)",
+      "Factoriser (mise en évidence, identités remarquables)",
+      "Traduire programme de calcul ↔ expression littérale"
+    ]},
+    { bloc:"FA — Premier degré", items:[
+      "Vocabulaire fonctions affines/linéaires/constantes",
+      "Représenter une affine (pente & ordonnée à l’origine)",
+      "Représenter une affine (2 points)",
+      "Retrouver l’expression d’une affine depuis le graphe (pente fractionnaire)",
+      "Parallélisme / perpendicularité",
+      "Résoudre équation du 1er degré (coefficients fractionnaires)",
+      "Traduire un problème en équation du 1er degré",
+      "Image, préimage, intersections avec Ox/Oy"
+    ]},
+    { bloc:"NO — Calcul numérique", items:[
+      "Calculer efficacement (4 opérations, priorités) sur entiers relatifs, décimaux, rationnels",
+      "Comparer deux nombres",
+      "Notation scientifique : définition + calculs",
+      "Règles de calcul des puissances entières",
+      "Racines carrées et cubiques + propriétés"
+    ]},
+    { bloc:"GM — Géométrie (Pythagore & figures)", items:[
+      "Théorème de Pythagore (direct, réciproque, contraposée)",
+      "Utiliser Pythagore pour longueur manquante / tester rectangle / dans l’espace",
+      "Périmètres (figures simples, polygones par décomposition)",
+      "Aires (figures simples, polygones par décomposition)",
+      "Cercle : périmètre & aire, longueur d’arc, secteur"
+    ]}
   ],
 
-  phase2: {
-    note: "Section indiquée comme à développer : Enjeux IA, place à donner à l’IA, ressources numériques."
-  },
-  phase3: {
-    note: "Section indiquée comme à développer : ajout de transversalité."
-  }
+  phase2: { note:"Section indiquée comme à développer : Enjeux IA, place à donner à l’IA, ressources numériques." },
+  phase3: { note:"Section indiquée comme à développer : ajout de transversalité." }
 };
 
-/** =========================
- *  RENDU UI
- *  ========================= */
+/* --- Helpers --- */
 const elPills = document.getElementById("topPills");
 const elToc   = document.getElementById("toc");
 const elMain  = document.getElementById("content");
 
-let state = {
-  viewId: "phase1",
-  chapterFilter: new Set(["ALL"]),
-  query: ""
-};
+let state = { viewId: "competences", chapterFilter: new Set(["ALL"]), query: "" };
 
 function h(tag, attrs={}, children=[]){
   const e = document.createElement(tag);
@@ -505,95 +430,149 @@ function h(tag, attrs={}, children=[]){
   }
   return e;
 }
-
 function scrollToId(id){
   const target = document.getElementById(id);
   if (!target) return;
   target.scrollIntoView({behavior:"smooth", block:"start"});
 }
 
+/* --- Top pills + TOC --- */
 function renderPills(){
   elPills.innerHTML = "";
   DATA.nav.forEach(n=>{
-    const btn = h("button", {
-      class:"pill" + (state.viewId===n.id ? " active":""),
-      type:"button",
-      onclick: () => { state.viewId=n.id; renderAll(); scrollToId(n.id); }
-    }, [n.label]);
-    elPills.appendChild(btn);
+    elPills.appendChild(
+      h("button", {
+        class:"pill" + (state.viewId===n.id ? " active":""),
+        type:"button",
+        onclick: () => { state.viewId=n.id; renderAll(false); scrollToId(n.id); }
+      }, [n.label])
+    );
   });
 }
-
 function renderToc(){
   elToc.innerHTML = "";
   DATA.nav.forEach(n=>{
-    const li = h("li", {}, [
-      h("a", {href:"#"+n.id, onclick:(ev)=>{ev.preventDefault(); state.viewId=n.id; renderAll(); scrollToId(n.id);} }, [n.label])
-    ]);
-    elToc.appendChild(li);
+    elToc.appendChild(
+      h("li", {}, [
+        h("a", {href:"#"+n.id, onclick:(ev)=>{ev.preventDefault(); state.viewId=n.id; renderAll(false); scrollToId(n.id);} }, [n.label])
+      ])
+    );
   });
 }
 
-function renderSectionPhase1(){
-  const sec = h("section", {class:"section", id:"phase1"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Phase 1"]),
-      h("div", {class:"muted"}, [""])
-    ]),
-    h("p", {class:"mini"}, [DATA.phase1.intro]),
-    h("div", {class:"note"}, [
-      h("div", {class:"muted"}, ["Cadre / intentions (extraits) :"]),
-      h("ul", {class:"bullets"}, DATA.phase1.cadre.map(t=>h("li",{},[t])))
-    ])
-  ]);
-  return sec;
-}
-
-function renderSectionEtape1(){
-  return h("section", {class:"section", id:"etape1"}, [
-    h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Étape 1 — Présentation"]),
-      h("div", {class:"muted"}, [""])
-    ]),
-    h("details", {class:"accordion", open:true}, [
-      h("summary", {}, ["Présentation de la discipline (Mathématiques)", h("span",{class:"muted"},["▲"])]),
-      h("div", {class:"accBody"}, [
-        h("p", {}, [
-          "Ce bloc sert à poser l’intention (discipline, cohérence, preuve, modélisation, communication). ",
-          h("span", {class:"muted"}, ["(Tu peux coller ici des paragraphes complets si besoin.)"])
-        ])
-      ])
-    ])
-  ]);
-}
-
+/* --- Sections --- */
 function renderSectionCompetences(){
-  const sec = h("section", {class:"section", id:"competences"}, [
+  return h("section", {class:"section", id:"competences"}, [
     h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Compétences clés"]),
-      h("div", {class:"muted"}, [""])
+      h("h2", {class:"sectionTitle"}, ["▼ Compétences clés en mathématiques"]),
+      h("p", {class:"mini"}, ["Clique sur une compétence pour afficher la déclinaison (a, b, c…)."])
     ]),
-    h("div", {class:"items"}, DATA.competencesCles.map(c =>
-      h("div", {class:"item"}, [
-        h("div", {class:"itemTop"}, [
-          h("p", {class:"itemTitle"}, [c.code + " — " + c.titre]),
-          h("div", {class:"badges"}, [h("span",{class:"badge"},[c.code])])
+
+    h("div", {class:"competences"}, [
+      h("details", {class:"comp c1", open:true}, [
+        h("summary", {}, [
+          h("div", {class:"compLeft"}, [
+            h("span", {class:"chev"}, ["▶"]),
+            h("p", {class:"compTitle"}, ["C1 — Raisonner de façon argumentée et rigoureuse"])
+          ]),
+          h("span", {class:"badge"}, ["C1"])
+        ]),
+        h("div", {class:"compBody"}, [
+          h("ol", {class:"subpoints", type:"a"}, [
+            h("li", {}, ["Acquérir les bases de la démarche déductive : définition, axiome, conjecture, démonstration, théorème, hypothèse, conclusion, contre-exemple, implication, réciproque, contraposée."]),
+            h("li", {}, ["Être capable de comprendre, critiquer et restituer un raisonnement mathématique ou logique."]),
+            h("li", {}, ["Produire une pensée logique et abstraite structurée."])
+          ])
+        ])
+      ]),
+
+      h("div", {class:"trait"}, []),
+
+      h("details", {class:"comp c2"}, [
+        h("summary", {}, [
+          h("div", {class:"compLeft"}, [
+            h("span", {class:"chev"}, ["▶"]),
+            h("p", {class:"compTitle"}, ["C2 — Maîtriser les savoir-faire techniques en mathématiques"])
+          ]),
+          h("span", {class:"badge"}, ["C2"])
+        ]),
+        h("div", {class:"compBody"}, [
+          h("ol", {class:"subpoints", type:"a"}, [
+            h("li", {}, ["Savoir utiliser les fondamentaux de niveau gymnasial en arithmétique, algèbre, analyse, géométrie, logique, probabilités et statistiques."]),
+            h("li", {}, ["Développer des stratégies pour porter un regard critique dynamique sur un processus de résolution : prévoir, analyser et vérifier la cohérence d’un résultat."]),
+            h("li", {}, ["Utiliser efficacement les moyens numériques à disposition."])
+          ])
+        ])
+      ]),
+
+      h("div", {class:"trait"}, []),
+
+      h("details", {class:"comp c3"}, [
+        h("summary", {}, [
+          h("div", {class:"compLeft"}, [
+            h("span", {class:"chev"}, ["▶"]),
+            h("p", {class:"compTitle"}, ["C3 — Appréhender un problème à l’aide des outils mathématiques"])
+          ]),
+          h("span", {class:"badge"}, ["C3"])
+        ]),
+        h("div", {class:"compBody"}, [
+          h("ol", {class:"subpoints", type:"a"}, [
+            h("li", {}, ["Modéliser un problème en mobilisant le registre adéquat (schématique, algébrique, graphique)."]),
+            h("li", {}, ["Appliquer des méthodes standards de résolution de problèmes (se ramener à un cas connu, étudier un cas particulier, introduire un élément auxiliaire, etc.) et choisir les savoir-faire techniques adéquats."]),
+            h("li", {}, ["Porter un regard critique et interpréter des résultats dans différents contextes (notamment évaluer la précision attendue) dans une réponse (valeur exacte, arrondi, chiffres significatifs)."])
+          ])
+        ])
+      ]),
+
+      h("div", {class:"trait"}, []),
+
+      h("details", {class:"comp c4"}, [
+        h("summary", {}, [
+          h("div", {class:"compLeft"}, [
+            h("span", {class:"chev"}, ["▶"]),
+            h("p", {class:"compTitle"}, ["C4 — Communiquer à l’écrit et à l’oral en s’appuyant sur le langage symbolique et graphique"])
+          ]),
+          h("span", {class:"badge"}, ["C4"])
+        ]),
+        h("div", {class:"compBody"}, [
+          h("ol", {class:"subpoints", type:"a"}, [
+            h("li", {}, ["Utiliser de façon précise les notations, symboles et définitions mathématiques selon les conventions définies par la Commission Romande de Mathématique."]),
+            h("li", {}, ["Utiliser les différents registres de représentations (graphique, algébrique, schématique et textuel) selon leur pertinence."]),
+            h("li", {}, ["Produire une argumentation claire et structurée, à l’écrit et à l’oral."])
+          ])
+        ])
+      ]),
+
+      h("div", {class:"trait"}, []),
+
+      h("details", {class:"comp c5"}, [
+        h("summary", {}, [
+          h("div", {class:"compLeft"}, [
+            h("span", {class:"chev"}, ["▶"]),
+            h("p", {class:"compTitle"}, ["C5 — Inscrire les mathématiques dans l’histoire, identifier des liens avec les autres disciplines et des enjeux actuels"])
+          ]),
+          h("span", {class:"badge"}, ["C5"])
+        ]),
+        h("div", {class:"compBody"}, [
+          h("ol", {class:"subpoints", type:"a"}, [
+            h("li", {}, ["Transposer les mathématiques dans les autres disciplines (en particulier biologie, chimie, économie, géographie, informatique, physique)."]),
+            h("li", {}, ["Avoir une vision des mathématiques dans une perspective historique (connaître quelques grandes étapes et personnages historiques)."]),
+            h("li", {}, ["Avoir une vision des mathématiques dans une perspective sociale, de leur utilité et des applications possibles, y compris en termes d’enjeux sociaux."]),
+            h("li", {}, ["Développer une sensibilité à l’élégance intrinsèque des mathématiques."])
+          ])
         ])
       ])
-    ))
+    ])
   ]);
-  return sec;
 }
 
 function renderSectionProgression(){
-  const sec = h("section", {class:"section", id:"progression"}, [
+  return h("section", {class:"section", id:"progression"}, [
     h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Progression (1re → 4e)"]),
+      h("h2", {class:"sectionTitle"}, ["▼ Progression (1re → 4e)"]),
       h("div", {class:"muted"}, [""])
     ]),
-    h("p", {class:"mini"}, [
-      "Vue synthèse par année (à enrichir)."
-    ]),
+    h("p", {class:"mini"}, ["Vue synthèse par année (à enrichir)."]),
     ...DATA.progressionParAnnee.map(a =>
       h("details", {class:"accordion", open:false}, [
         h("summary", {}, [a.annee, h("span",{class:"muted"},["▼"])]),
@@ -603,11 +582,9 @@ function renderSectionProgression(){
       ])
     )
   ]);
-  return sec;
 }
 
 function normalizeTags(tags){ return tags.map(t=>t.trim()); }
-
 function itemMatchesFilters(item){
   const q = state.query.trim().toLowerCase();
   if (q && !item.titre.toLowerCase().includes(q)) return false;
@@ -616,16 +593,16 @@ function itemMatchesFilters(item){
   if (active.includes("ALL")) return true;
 
   const tags = normalizeTags(item.tags || []);
-  // Si on choisit plusieurs chips, on accepte si l’item match au moins une des chips (OR).
   return active.some(f => tags.includes(f));
 }
 
 function renderSectionDecoupages(){
   const chapter = DATA.decoupages.chapitres[0];
   const allFilters = ["ALL","C1","C2","C3","C4","C5","CdB","L","T","N"];
-  const sec = h("section", {class:"section", id:"decoupages"}, [
+
+  return h("section", {class:"section", id:"decoupages"}, [
     h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Découpages annuels / Vues dynamiques"]),
+      h("h2", {class:"sectionTitle"}, ["▼ Découpages annuels / Vues dynamiques"]),
       h("div", {class:"muted"}, [""])
     ]),
     h("p", {class:"mini"}, [
@@ -665,8 +642,6 @@ function renderSectionDecoupages(){
       ])
     ])
   ]);
-
-  return sec;
 }
 
 function renderChapterItems(){
@@ -711,12 +686,10 @@ function renderChapterItems(){
 function renderSectionAcquisCO(){
   return h("section", {class:"section", id:"acquisCO"}, [
     h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Acquis du CO (référence)"]),
+      h("h2", {class:"sectionTitle"}, ["▼ Acquis du CO (référence)"]),
       h("div", {class:"muted"}, [""])
     ]),
-    h("p", {class:"mini"}, [
-      "Cette vue regroupe les acquis du cycle d’orientation (utile comme “référentiel d’entrée”, séparé du PEc)."
-    ]),
+    h("p", {class:"mini"}, ["Référentiel d’entrée (acquis avant le collège)."]),
     ...DATA.acquisCO.map(b =>
       h("details", {class:"accordion", open:false}, [
         h("summary", {}, [b.bloc, h("span",{class:"muted"},["▼"])]),
@@ -731,30 +704,28 @@ function renderSectionAcquisCO(){
 function renderSectionPhase2(){
   return h("section", {class:"section", id:"phase2"}, [
     h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Phase 2 : IA et numérique"]),
+      h("h2", {class:"sectionTitle"}, ["▼ Phase 2 : IA et numérique"]),
       h("div", {class:"muted"}, [""])
     ]),
     h("div", {class:"note"}, [DATA.phase2.note])
   ]);
 }
-
 function renderSectionPhase3(){
   return h("section", {class:"section", id:"phase3"}, [
     h("div", {class:"sectionHead"}, [
-      h("h2", {class:"sectionTitle"}, ["▼  Phase 3 : transversalité"]),
+      h("h2", {class:"sectionTitle"}, ["▼ Phase 3 : transversalité"]),
       h("div", {class:"muted"}, [""])
     ]),
     h("div", {class:"note"}, [DATA.phase3.note])
   ]);
 }
 
-function renderAll(resetScroll=true){
+/* --- Render all --- */
+function renderAll(doScroll){
   renderPills();
   renderToc();
 
   elMain.innerHTML = "";
-  elMain.appendChild(renderSectionPhase1());
-  elMain.appendChild(renderSectionEtape1());
   elMain.appendChild(renderSectionCompetences());
   elMain.appendChild(renderSectionProgression());
   elMain.appendChild(renderSectionDecoupages());
@@ -764,10 +735,24 @@ function renderAll(resetScroll=true){
 
   renderChapterItems();
 
-  if (resetScroll) scrollToId(state.viewId);
+  if (doScroll) scrollToId(state.viewId);
 }
 
-renderAll();
+/* Interactions : 1 compétence ouverte à la fois */
+function wireCompetences(){
+  document.querySelectorAll('details.comp').forEach(d => {
+    d.addEventListener('toggle', () => {
+      if (!d.open) return;
+      document.querySelectorAll('details.comp').forEach(other => {
+        if (other !== d) other.open = false;
+      });
+    });
+  });
+}
+
+/* Init */
+renderAll(false);
+wireCompetences();
 </script>
 </body>
 </html>
