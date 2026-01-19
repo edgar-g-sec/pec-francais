@@ -435,6 +435,27 @@
       border-color:#cfe0ff;
       box-shadow:0 0 0 4px rgba(37,99,235,.08);
     }
+/* =========================================================
+   BARRE DE NAVIGATION "FIGÉE" (solution robuste)
+   ========================================================= */
+
+   .header{
+  position: sticky;
+  top: 0;
+  z-index: 2000;
+  background: var(--card);
+}
+
+/* petit séparateur/ombre quand c'est collé */
+.header{
+  border-bottom: 1px solid var(--border);
+}
+
+/* Pour éviter que les titres soient cachés sous la barre */
+details.section.bigAcc{
+  scroll-margin-top: 160px; /* (header + marges) */
+}
+
   </style>
 </head>
 
