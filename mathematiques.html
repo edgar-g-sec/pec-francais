@@ -30,6 +30,8 @@
       background:var(--bg);
       line-height:1.45;
     }
+    a{color:#1d4ed8;text-decoration:none}
+    a:hover{text-decoration:underline}
     .wrap{max-width:1100px;margin:24px auto;padding:0 16px 40px;}
     .header{
       background:var(--card);
@@ -154,24 +156,51 @@
       box-shadow:var(--shadow);
       padding:14px;
     }
-    .section{
+
+    /* --------- GRANDES SECTIONS PLIABLES (bigAcc) --------- */
+    details.section.bigAcc{
       border:1px solid var(--border);
       border-radius:var(--radius);
       background:#fff;
       padding:14px;
       margin-bottom:14px;
+      overflow:hidden;
     }
-    .sectionHead{
-      display:flex;align-items:center;justify-content:space-between;gap:12px;
-      margin-bottom:10px;
+    details.section.bigAcc > summary{
+      list-style:none;
+      cursor:pointer;
+      user-select:none;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+      margin:0;
     }
-    .sectionTitle{
-      display:flex;align-items:center;gap:10px;
-      margin:0;font-weight:900;font-size:20px;letter-spacing:-0.02em;
+    details.section.bigAcc > summary::-webkit-details-marker{display:none}
+    .sectionHeadLeft{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      min-width:0;
     }
+    .sectionTitleText{
+      margin:0;
+      font-weight:900;
+      font-size:20px;
+      letter-spacing:-0.02em;
+    }
+    .bigChev{
+      display:inline-flex;
+      width:20px;
+      justify-content:center;
+      color:var(--muted);
+      transition: transform .12s ease;
+    }
+    details.bigAcc:not([open]) .bigChev{ transform: rotate(-90deg); }
     .mini{margin:0;color:var(--muted);font-size:13px}
+    .sectionBody{ padding-top:10px; }
 
-    /* Competences (accordion cards like screenshot) */
+    /* Competences (accordion cards) */
     details.comp{
       border:1px solid var(--border);
       border-radius:14px;
@@ -234,7 +263,7 @@
       }
     }
 
-    /* Progression: year accents */
+    /* --------- PROGRESSION (années) --------- */
     .y1{ --yearAccent:#2563eb; --yearSoft:#e8efff; }
     .y2{ --yearAccent:#16a34a; --yearSoft:#e8fff1; }
     .y3{ --yearAccent:#f59e0b; --yearSoft:#fff6e6; }
@@ -313,6 +342,99 @@
     .progCardBody{padding:10px 12px 12px}
     .progList{margin:0;padding-left:18px;font-size:13px}
     .progList li{margin:6px 0}
+
+    /* --------- DÉCOUPAGES & ACQUIS (récupérés de l'ancien code) --------- */
+    details.accordion{
+      border:1px solid var(--border);
+      border-radius:12px;
+      background:#fbfcff;
+      margin-top:10px;
+      overflow:hidden;
+    }
+    details.accordion > summary{
+      list-style:none;
+      cursor:pointer;
+      padding:11px 12px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:10px;
+      font-weight:800;
+      user-select:none;
+    }
+    details.accordion > summary::-webkit-details-marker{display:none}
+    .accBody{padding:0 12px 12px}
+
+    .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+    .chip{
+      border:1px solid var(--border);
+      background:#fff;
+      border-radius:999px;
+      padding:6px 10px;
+      font-size:13px;
+      cursor:pointer;
+      user-select:none;
+    }
+    .chip.active{
+      background: var(--pill-active);
+      border-color: var(--pill-ring);
+      color:#1d4ed8;
+      font-weight:800;
+    }
+
+    .items{margin-top:10px;border-top:1px solid var(--border);padding-top:10px;}
+    .item{
+      padding:10px 10px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      margin:8px 0;
+      background:#fff;
+    }
+    .itemTop{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .itemTitle{margin:0;font-weight:800;font-size:14px;}
+    .badges{display:flex;flex-wrap:wrap;gap:6px;justify-content:flex-end;min-width:160px;}
+    .note{
+      border-left:3px solid #c7d2fe;
+      padding:8px 10px;
+      margin:10px 0;
+      background:#f5f7ff;
+      color:#1f2937;
+      border-radius:10px;
+      font-size:13px;
+    }
+    .k{
+      font-family:var(--mono);
+      background:#f3f4f6;
+      padding:2px 6px;
+      border-radius:8px;
+      border:1px solid #e5e7eb;
+    }
+    .searchRow{
+      display:flex;
+      gap:10px;
+      margin-top:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    input[type="search"]{
+      flex:1;
+      min-width:240px;
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    input[type="search"]:focus{
+      border-color:#cfe0ff;
+      box-shadow:0 0 0 4px rgba(37,99,235,.08);
+    }
   </style>
 </head>
 
@@ -352,58 +474,103 @@
       </aside>
 
       <main class="main" id="main">
-        <section class="section" id="competences">
-          <div class="sectionHead">
-            <h2 class="sectionTitle">▼ Compétences clés en mathématiques</h2>
-            <p class="mini">Cliquez sur une compétence pour afficher la déclinaison (a, b, c...).</p>
-          </div>
 
-          <div id="competencesMount"></div>
-        </section>
+        <!-- COMPÉTENCES -->
+        <details class="section bigAcc" id="competences" open>
+          <summary>
+            <div class="sectionHeadLeft">
+              <span class="bigChev">▼</span>
+              <h2 class="sectionTitleText">Compétences clés en mathématiques</h2>
+            </div>
+            <p class="mini">Cliquez pour replier/déplier.</p>
+          </summary>
 
-        <section class="section" id="progression">
-          <div class="sectionHead">
-            <h2 class="sectionTitle">▼ Progression (1re → 4e)</h2>
-            <p class="mini">Cliquez une année (grille), puis basculez via les boutons.</p>
+          <div class="sectionBody">
+            <p class="mini" style="margin:0 0 10px;">
+              Cliquez sur une compétence pour afficher la déclinaison (a, b, c…) et ouvrir le volet “Ressources”.
+            </p>
+            <div id="competencesMount"></div>
           </div>
-          <div id="progressionMount"></div>
-        </section>
+        </details>
 
-        <section class="section" id="decoupages">
-          <div class="sectionHead">
-            <h2 class="sectionTitle">▼ Découpages annuels</h2>
-            <p class="mini">Section démo (à enrichir).</p>
-          </div>
-          <p style="margin:0;color:var(--muted);font-size:13px;">Contenu à définir : chapitres, objectifs, liens C1–C5, etc.</p>
-        </section>
+        <!-- PROGRESSION -->
+        <details class="section bigAcc" id="progression" open>
+          <summary>
+            <div class="sectionHeadLeft">
+              <span class="bigChev">▼</span>
+              <h2 class="sectionTitleText">Progression (1re → 4e)</h2>
+            </div>
+            <p class="mini">Cliquez pour replier/déplier.</p>
+          </summary>
 
-        <section class="section" id="acquis">
-          <div class="sectionHead">
-            <h2 class="sectionTitle">▼ Acquis du CO</h2>
-            <p class="mini">Section démo (à enrichir).</p>
+          <div class="sectionBody">
+            <p class="mini" style="margin:0 0 10px;">
+              Cliquez une année (grille), puis basculez via les boutons. Cliquez une compétence pour voir les ressources.
+            </p>
+            <div id="progressionMount"></div>
           </div>
-          <p style="margin:0;color:var(--muted);font-size:13px;">Contenu à intégrer : acquis CdBA / NO / GM…</p>
-        </section>
+        </details>
 
-        <section class="section" id="phase2">
-          <div class="sectionHead">
-            <h2 class="sectionTitle">▼ Phase 2 : IA & numérique</h2>
-            <p class="mini">Section démo (à enrichir).</p>
-          </div>
-          <ul style="margin:0;padding-left:18px;font-size:13px;">
-            <li>Enjeux liés à l’IA</li>
-            <li>Place à donner à l’IA</li>
-            <li>Ressources numériques</li>
-          </ul>
-        </section>
+        <!-- DÉCOUPAGES (récupérés) -->
+        <details class="section bigAcc" id="decoupages" open>
+          <summary>
+            <div class="sectionHeadLeft">
+              <span class="bigChev">▼</span>
+              <h2 class="sectionTitleText">Découpages annuels / Vues dynamiques</h2>
+            </div>
+            <p class="mini">Cliquez pour replier/déplier.</p>
+          </summary>
 
-        <section class="section" id="phase3">
-          <div class="sectionHead">
-            <h2 class="sectionTitle">▼ Phase 3 : transversalité</h2>
-            <p class="mini">Section démo (à enrichir).</p>
+          <div class="sectionBody" id="decoupagesMount"></div>
+        </details>
+
+        <!-- ACQUIS DU CO (récupérés) -->
+        <details class="section bigAcc" id="acquis" open>
+          <summary>
+            <div class="sectionHeadLeft">
+              <span class="bigChev">▼</span>
+              <h2 class="sectionTitleText">Acquis du CO (référence)</h2>
+            </div>
+            <p class="mini">Cliquez pour replier/déplier.</p>
+          </summary>
+
+          <div class="sectionBody" id="acquisMount"></div>
+        </details>
+
+        <!-- PHASE 2 -->
+        <details class="section bigAcc" id="phase2">
+          <summary>
+            <div class="sectionHeadLeft">
+              <span class="bigChev">▼</span>
+              <h2 class="sectionTitleText">Phase 2 : IA & numérique</h2>
+            </div>
+            <p class="mini">Cliquez pour replier/déplier.</p>
+          </summary>
+
+          <div class="sectionBody">
+            <ul style="margin:0;padding-left:18px;font-size:13px;">
+              <li>Enjeux liés à l’IA</li>
+              <li>Place à donner à l’IA</li>
+              <li>Ressources numériques</li>
+            </ul>
           </div>
-          <p style="margin:0;color:var(--muted);font-size:13px;">Contenu à définir.</p>
-        </section>
+        </details>
+
+        <!-- PHASE 3 -->
+        <details class="section bigAcc" id="phase3">
+          <summary>
+            <div class="sectionHeadLeft">
+              <span class="bigChev">▼</span>
+              <h2 class="sectionTitleText">Phase 3 : transversalité</h2>
+            </div>
+            <p class="mini">Cliquez pour replier/déplier.</p>
+          </summary>
+
+          <div class="sectionBody">
+            <p style="margin:0;color:var(--muted);font-size:13px;">Contenu à définir.</p>
+          </div>
+        </details>
+
       </main>
     </div>
   </div>
@@ -416,6 +583,7 @@
       const el = document.createElement(tag);
       for(const [k,v] of Object.entries(attrs||{})){
         if(k === "class") el.className = v;
+        else if(k === "html") el.innerHTML = v;
         else if(k.startsWith("on") && typeof v === "function") el.addEventListener(k.slice(2), v);
         else if(v === true) el.setAttribute(k, "");
         else if(v !== false && v != null) el.setAttribute(k, String(v));
@@ -433,7 +601,7 @@
     }
 
     // -----------------------
-    // Data
+    // Data (fusion)
     // -----------------------
     const DATA = {
       nav: [
@@ -446,45 +614,35 @@
       ],
 
       competences: [
-        {
-          code:"C1", cls:"c1",
-          title:"C1 — Raisonner de façon argumentée et rigoureuse",
+        { code:"C1", cls:"c1", title:"C1 — Raisonner de façon argumentée et rigoureuse",
           points:[
             "Acquérir les bases de la démarche déductive : définition, axiome, conjecture, démonstration, théorème, hypothèse, conclusion, contre-exemple, implication, réciproque, contraposée.",
             "Être capable de comprendre, critiquer et restituer un raisonnement mathématique ou logique.",
             "Produire une pensée logique et abstraite structurée."
           ]
         },
-        {
-          code:"C2", cls:"c2",
-          title:"C2 — Maîtriser les savoir-faire techniques en mathématiques",
+        { code:"C2", cls:"c2", title:"C2 — Maîtriser les savoir-faire techniques en mathématiques",
           points:[
             "Savoir utiliser les fondamentaux de niveau gymnasial en arithmétique, algèbre, analyse, géométrie, logique, probabilités et statistiques.",
             "Développer des stratégies pour porter un regard critique dynamique sur un processus de résolution : prévoir, analyser et vérifier la cohérence d’un résultat.",
             "Utiliser efficacement les moyens numériques à disposition."
           ]
         },
-        {
-          code:"C3", cls:"c3",
-          title:"C3 — Appréhender un problème à l’aide des outils mathématiques",
+        { code:"C3", cls:"c3", title:"C3 — Appréhender un problème à l’aide des outils mathématiques",
           points:[
             "Modéliser un problème en mobilisant le registre adéquat (schématique, algébrique, graphique).",
             "Appliquer des méthodes standards de résolution de problèmes (se ramener à un cas connu, étudier un cas particulier, introduire un élément auxiliaire, etc.) et choisir les savoir-faire techniques adéquats.",
             "Porter un regard critique et interpréter des résultats dans différents contextes (notamment évaluer la précision attendue) dans une réponse (valeur exacte, arrondi, chiffres significatifs)."
           ]
         },
-        {
-          code:"C4", cls:"c4",
-          title:"C4 — Communiquer à l’écrit et à l’oral via le langage symbolique et graphique",
+        { code:"C4", cls:"c4", title:"C4 — Communiquer à l’écrit et à l’oral via le langage symbolique et graphique",
           points:[
             "Utiliser de façon précise les notations, symboles et définitions mathématiques selon les conventions définies par la Commission Romande de Mathématique.",
             "Utiliser les différents registres de représentations (graphique, algébrique, schématique et textuel) selon leur pertinence.",
             "Produire une argumentation claire et structurée, à l’écrit et à l’oral."
           ]
         },
-        {
-          code:"C5", cls:"c5",
-          title:"C5 — Inscrire les mathématiques dans l’histoire, liens & enjeux actuels",
+        { code:"C5", cls:"c5", title:"C5 — Inscrire les mathématiques dans l’histoire, liens & enjeux actuels",
           points:[
             "Transposer les mathématiques dans les autres disciplines (en particulier biologie, chimie, économie, géographie, informatique, physique).",
             "Avoir une vision des mathématiques dans une perspective historique (connaître quelques grandes étapes et personnages historiques).",
@@ -494,7 +652,6 @@
         }
       ],
 
-      // Ressources par compétence (exemples)
       ressourcesParCompetence: {
         C1: [
           { type:"pdf",   name:"Fiche — Bases de la démarche déductive", meta:"PDF • 6 pages", href:"#"},
@@ -523,7 +680,6 @@
         ]
       },
 
-      // Progression : années
       years: [
         { id:"y1", label:"1re année", comps:{
           C1:["a) Identifier et utiliser le vocabulaire…","b) Comprendre et restituer…","c) Structurer une argumentation courte…"],
@@ -561,7 +717,69 @@
         C3: "Compétence 3 : Appréhender un problème à l’aide des outils mathématiques",
         C4: "Compétence 4 : Communiquer à l'écrit et à l'oral en s'appuyant sur le langage symbolique et graphique",
         C5: "Compétence 5 : Inscrire les mathématiques dans l’histoire, identifier des liens avec les autres disciplines et des enjeux actuels",
-      }
+      },
+
+      // --- Récupération de votre ancien "Découpages annuels"
+      decoupages: {
+        annee: "Première année (niveau normal) — exemple",
+        chapitres: [
+          {
+            id:"A1-CH1",
+            titre:"Chapitre 1 : Calcul numérique et algébrique",
+            items: [
+              { titre:"Définir les ensembles de nombres (N, Z, Q → approche R), puissances entières et racines carrées", tags:["C2","CdB"] },
+              { titre:"Connaître le vocabulaire et les notations du calcul numérique et de la théorie des ensembles (liste du minimum commun)", tags:["C3","CdB"] },
+              { titre:"Calculer avec les nombres entiers et relatifs (priorités, parenthèses, signes, fractions)", tags:["C1","L"] },
+              { titre:"Différencier nombres, constantes et variables", tags:["C2","CdB"] },
+              { titre:"Lire et utiliser les notations algébriques (liste des notations communes)", tags:["C3"] },
+              { titre:"Calculer avec les puissances entières et les racines carrées", tags:["C1","CdB"] },
+              { titre:"Analyser la structure de termes algébriques", tags:["C3"] },
+              { titre:"Effectuer des calculs algébriques : développer, réduire, factoriser", tags:["C2"] },
+              { titre:"Construction mathématique : déf./conjecture/contre-exemple/démonstration/théorème/réciproque/contraposée + produire des conjectures simples", tags:["C2"] },
+              { titre:"Démonstration : propriétés des puissances, racines, irrationalité de √2, identités remarquables", tags:["C2"] },
+              { titre:"Éléments d’histoire des nombres et de l’algèbre (liste du minimum commun)", tags:["C4","L"] }
+            ]
+          }
+        ]
+      },
+
+      // --- Récupération de votre ancien "Acquis du CO"
+      acquisCO: [
+        { bloc:"FA — Calcul littéral", items:[
+          "Connaître le vocabulaire lié au calcul littéral",
+          "Connaître et utiliser les conventions du calcul littéral",
+          "Calculer avec monômes et polynômes",
+          "Évaluer une expression littérale",
+          "Transformer des formules simples (isoler une variable)",
+          "Développer (identités remarquables, distributivité)",
+          "Factoriser (mise en évidence, identités remarquables)",
+          "Traduire programme de calcul ↔ expression littérale"
+        ]},
+        { bloc:"FA — Premier degré", items:[
+          "Vocabulaire fonctions affines/linéaires/constantes",
+          "Représenter une affine (pente & ordonnée à l’origine)",
+          "Représenter une affine (2 points)",
+          "Retrouver l’expression d’une affine depuis le graphe (pente fractionnaire)",
+          "Parallélisme / perpendicularité",
+          "Résoudre équation du 1er degré (coefficients fractionnaires)",
+          "Traduire un problème en équation du 1er degré",
+          "Image, préimage, intersections avec Ox/Oy"
+        ]},
+        { bloc:"NO — Calcul numérique", items:[
+          "Calculer efficacement (4 opérations, priorités) sur entiers relatifs, décimaux, rationnels",
+          "Comparer deux nombres",
+          "Notation scientifique : définition + calculs",
+          "Règles de calcul des puissances entières",
+          "Racines carrées et cubiques + propriétés"
+        ]},
+        { bloc:"GM — Géométrie (Pythagore & figures)", items:[
+          "Théorème de Pythagore (direct, réciproque, contraposée)",
+          "Utiliser Pythagore pour longueur manquante / tester rectangle / dans l’espace",
+          "Périmètres (figures simples, polygones par décomposition)",
+          "Aires (figures simples, polygones par décomposition)",
+          "Cercle : périmètre & aire, longueur d’arc, secteur"
+        ]}
+      ]
     };
 
     // -----------------------
@@ -586,10 +804,7 @@
       if(type==="activity") return "🧩";
       return "📌";
     }
-
-    function hideResources(){
-      document.getElementById("resourcesPanel").hidden = true;
-    }
+    function hideResources(){ document.getElementById("resourcesPanel").hidden = true; }
     document.getElementById("btnCloseRes").addEventListener("click", hideResources);
 
     function showResourcesFor(compCode){
@@ -598,10 +813,7 @@
       const resFor= document.getElementById("resFor");
 
       const res = (DATA.ressourcesParCompetence && DATA.ressourcesParCompetence[compCode]) || [];
-      if(res.length === 0){
-        panel.hidden = true;
-        return;
-      }
+      if(res.length === 0){ panel.hidden = true; return; }
 
       resFor.textContent = `Pour : ${compCode}`;
       list.innerHTML = "";
@@ -619,12 +831,9 @@
       });
 
       panel.hidden = false;
-
-      // Si la sidebar est “mini”, on la ré-ouvre pour voir les ressources
       const grid = document.getElementById("grid");
       if(grid.classList.contains("sidebarMini")) grid.classList.remove("sidebarMini");
     }
-    // rendre accessible globalement si besoin
     window.showResourcesFor = showResourcesFor;
 
     // -----------------------
@@ -641,6 +850,9 @@
           "aria-current": idx===0 ? "true" : "false",
           onclick: ()=>{
             setActivePill(it.id);
+            // si la section est repliée, on l'ouvre pour éviter une "page vide"
+            const s = document.getElementById(it.id);
+            if(s && s.tagName.toLowerCase()==="details") s.open = true;
             smoothScrollTo(it.id);
           }
         }, [it.label]);
@@ -651,7 +863,13 @@
       toc.innerHTML = "";
       DATA.nav.forEach(it=>{
         toc.appendChild(h("li",{},[
-          h("a",{href:"#"+it.id, onclick:(e)=>{e.preventDefault(); setActivePill(it.id); smoothScrollTo(it.id);} },[it.label])
+          h("a",{href:"#"+it.id, onclick:(e)=>{
+            e.preventDefault();
+            setActivePill(it.id);
+            const s = document.getElementById(it.id);
+            if(s && s.tagName.toLowerCase()==="details") s.open = true;
+            smoothScrollTo(it.id);
+          }},[it.label])
         ]));
       });
     }
@@ -685,7 +903,6 @@
 
         det.addEventListener("toggle", ()=>{
           if(det.open){
-            // 1 ouvert à la fois
             mount.querySelectorAll("details.comp").forEach(o=>{ if(o!==det) o.open=false; });
             showResourcesFor(c.code);
           } else {
@@ -694,7 +911,6 @@
         });
 
         mount.appendChild(det);
-
         if(idx < DATA.competences.length-1) mount.appendChild(h("div",{class:"trait"}));
       });
     }
@@ -703,7 +919,6 @@
     // Render: Progression (year grid -> detail)
     // -----------------------
     let progressionState = { selectedYear: null };
-
     function yearClassFromId(id){ return id; } // y1..y4 matches CSS classes
 
     function renderYearGrid(mount){
@@ -728,7 +943,6 @@
     function renderYearDetail(mount, yearObj){
       const wrap = h("div",{class: yearClassFromId(yearObj.id)},[]);
 
-      // Nav bar
       const nav = h("div",{class:"yearNavBar"},[
         h("button",{class:"backLink", type:"button", onclick:()=>{
           progressionState.selectedYear = null;
@@ -749,10 +963,8 @@
           },[y.label])
         );
       });
-
       wrap.appendChild(nav);
 
-      // Cards
       const grid = h("div",{class:"progressGrid"},[]);
       ["C1","C2","C3","C4","C5"].forEach(code=>{
         const subs = yearObj.comps?.[code];
@@ -764,7 +976,7 @@
               h("p",{class:"progCardTitle"},[DATA.compTitles[code] || code]),
               h("p",{class:"progCardSub"},[yearObj.label])
             ]),
-            h("span",{class:"progBadge"},[code])
+            h("span",{class:"badge"},[code])
           ]),
           h("div",{class:"progCardBody"},[
             h("ul",{class:"progList"}, subs.map(x=>h("li",{},[x])))
@@ -774,7 +986,6 @@
         const openRes = ()=>showResourcesFor(code);
         card.addEventListener("click", openRes);
         card.addEventListener("keydown",(e)=>{ if(e.key==="Enter"||e.key===" "){ e.preventDefault(); openRes(); }});
-
         grid.appendChild(card);
       });
 
@@ -785,13 +996,152 @@
     function renderProgression(){
       const mount = document.getElementById("progressionMount");
       mount.innerHTML = "";
-
-      if(progressionState.selectedYear == null){
-        renderYearGrid(mount);
-        return;
-      }
+      if(progressionState.selectedYear == null){ renderYearGrid(mount); return; }
       const y = DATA.years.find(x=>x.id===progressionState.selectedYear) || DATA.years[0];
       renderYearDetail(mount, y);
+    }
+
+    // -----------------------
+    // Découpages (rendu récupéré)
+    // -----------------------
+    const decState = { filter: new Set(["ALL"]), query: "" };
+
+    function normalizeTags(tags){ return (tags||[]).map(t=>String(t).trim()); }
+
+    function itemMatchesFilters(item){
+      const q = decState.query.trim().toLowerCase();
+      if(q && !String(item.titre||"").toLowerCase().includes(q)) return false;
+
+      const active = [...decState.filter];
+      if(active.includes("ALL")) return true;
+
+      const tags = normalizeTags(item.tags);
+      return active.some(f => tags.includes(f));
+    }
+
+    function renderDecoupages(){
+      const mount = document.getElementById("decoupagesMount");
+      mount.innerHTML = "";
+
+      const chapter = DATA.decoupages.chapitres[0];
+      const allFilters = ["ALL","C1","C2","C3","C4","C5","CdB","L","T","N"];
+
+      const sec = h("div", {}, [
+        h("p",{class:"mini"},[
+          DATA.decoupages.annee, " — ", h("span",{class:"k"},["exemple"]),
+          " : filtrage par compétence / tags."
+        ]),
+        h("details",{class:"accordion", open:true},[
+          h("summary",{},[
+            chapter.titre,
+            h("span",{style:"color:var(--muted);font-weight:700"},["▲"])
+          ]),
+          h("div",{class:"accBody"},[
+            h("div",{class:"searchRow"},[
+              h("input",{
+                type:"search",
+                placeholder:"Rechercher dans le chapitre… (ex: “racines”, “démonstration”)",
+                value: decState.query,
+                oninput:(ev)=>{ decState.query = ev.target.value; renderDecoupagesItems(); }
+              }),
+              h("span",{class:"mini"},["Astuce : cliquez sur C1/C2/… pour filtrer."])
+            ]),
+            h("div",{class:"chips"}, allFilters.map(f=>{
+              const active = decState.filter.has(f);
+              return h("button",{
+                class:"chip"+(active?" active":""),
+                type:"button",
+                onclick:()=>{
+                  if(f==="ALL"){
+                    decState.filter = new Set(["ALL"]);
+                  } else {
+                    if(decState.filter.has("ALL")) decState.filter.delete("ALL");
+                    if(decState.filter.has(f)) decState.filter.delete(f);
+                    else decState.filter.add(f);
+                    if(decState.filter.size===0) decState.filter.add("ALL");
+                  }
+                  renderDecoupagesItems();
+                }
+              },[f]);
+            })),
+            h("div",{class:"items", id:"chapterItems"})
+          ])
+        ])
+      ]);
+
+      mount.appendChild(sec);
+      renderDecoupagesItems();
+    }
+
+    function renderDecoupagesItems(){
+      const holder = document.getElementById("chapterItems");
+      if(!holder) return;
+      holder.innerHTML = "";
+
+      const chapter = DATA.decoupages.chapitres[0];
+      const filtered = chapter.items.filter(itemMatchesFilters);
+
+      holder.appendChild(
+        h("p",{class:"mini"},[
+          "Résultats : ",
+          h("strong",{},[String(filtered.length)]),
+          " / ",
+          String(chapter.items.length),
+          " — filtres actifs : ",
+          h("span",{class:"k"},[[...decState.filter].join(", ")]),
+          decState.query.trim() ? (" — recherche : “" + decState.query.trim() + "”") : ""
+        ])
+      );
+
+      filtered.forEach(it=>{
+        holder.appendChild(
+          h("div",{class:"item"},[
+            h("div",{class:"itemTop"},[
+              h("p",{class:"itemTitle"},[it.titre]),
+              h("div",{class:"badges"}, (it.tags||[]).map(t=>h("span",{class:"badge"},[t])))
+            ])
+          ])
+        );
+      });
+
+      if(filtered.length===0){
+        holder.appendChild(h("div",{class:"note"},[
+          "Aucun item ne correspond à ces filtres/recherche. ",
+          h("span",{style:"color:var(--muted)"},["Essayez ALL ou retirez un filtre."])
+        ]));
+      }
+    }
+
+    // -----------------------
+    // Acquis du CO (rendu récupéré)
+    // -----------------------
+    function renderAcquis(){
+      const mount = document.getElementById("acquisMount");
+      mount.innerHTML = "";
+
+      mount.appendChild(
+        h("p",{class:"mini"},[
+          "Cette vue regroupe les acquis du cycle d’orientation (référentiel d’entrée)."
+        ])
+      );
+
+      DATA.acquisCO.forEach((b, idx)=>{
+        const det = h("details",{class:"accordion", open: idx===0},[
+          h("summary",{},[
+            b.bloc,
+            h("span",{style:"color:var(--muted);font-weight:700"},[idx===0?"▲":"▼"])
+          ]),
+          h("div",{class:"accBody"},[
+            h("ul",{style:"margin:10px 0 0;padding-left:18px;font-size:13px;"}, b.items.map(x=>h("li",{},[x])))
+          ])
+        ]);
+        // petite mise à jour du chevron texte
+        det.addEventListener("toggle", ()=>{
+          const s = det.querySelector("summary span");
+          if(s) s.textContent = det.open ? "▲" : "▼";
+        });
+        mount.appendChild(det);
+      });
     }
 
     // -----------------------
@@ -800,14 +1150,29 @@
     renderNav();
     renderCompetences();
     renderProgression();
+    renderDecoupages();
+    renderAcquis();
 
-    // Bonus: set pill active on scroll (simple)
+    // Bonus: set pill active on scroll
     const sections = DATA.nav.map(x=>document.getElementById(x.id)).filter(Boolean);
     const obs = new IntersectionObserver((entries)=>{
       const visible = entries.filter(e=>e.isIntersecting).sort((a,b)=>b.intersectionRatio-a.intersectionRatio)[0];
       if(visible && visible.target?.id) setActivePill(visible.target.id);
     }, {root:null, threshold:[0.2,0.35,0.5]});
     sections.forEach(s=>obs.observe(s));
+
+    // -----------------------
+    // Sidebar + close resources
+    // -----------------------
+    function initPillAndToc(){
+      // already handled in renderNav
+    }
+
+    // -----------------------
+    // Sidebar collapse buttons
+    // -----------------------
+    // already bound above
+
   </script>
 </body>
 </html>
